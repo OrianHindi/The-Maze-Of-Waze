@@ -24,6 +24,13 @@ public class Node implements node_data, Serializable {
         this.info=s.info;
         this.location= new Point3D(s.location);
     }
+    public Node(int key,Point3D location){
+        this.key=key;
+        this.tag=0;
+        this.info="";
+        this.location=location;
+        this.weight=0;
+    }
 
     /**
      * Constructor by point

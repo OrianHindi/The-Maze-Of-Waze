@@ -2,6 +2,8 @@ package dataStructure;
 
 import algorithms.Graph_Algo;
 import gui.Graph_GUI;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import utils.Point3D;
 
 import java.awt.*;
@@ -191,4 +193,34 @@ public class DGraph implements graph , Serializable {
 		return this.MC;
 	}
 
+
+	public void init(String JsonStr){
+		try {
+			JSONObject graph = new JSONObject(JsonStr);
+			JSONArray vertices = graph.getJSONArray("Nodes");
+			JSONArray edges = graph.getJSONArray("Edges");
+
+			int idNode,src,dest;
+			double weight;
+			String locationstring;
+			Point3D location;
+
+			for (int i = 0; i <vertices.length() ; i++) {
+				idNode=vertices.getJSONObject(i).getInt("id");
+				locationstring=vertices.getJSONObject(i).getString("pos");
+				location=new Point3D(locationstring);
+				this.addNode(new Node(idNode,location));
+			}
+			for (int i = 0; i <edges.length() ; i++) {
+				src=edges.getJSONObject(i).getInt("src");
+				dest=edges.getJSONObject(i).getInt("dest");
+				weight=edges.getJSONObject(i).getDouble("w");
+				this.connect(src,dest,weight);
+			}
+		}
+		catch(Exception JsonProb){
+			JsonProb.printStackTrace();
+		}
+
+	}
 }

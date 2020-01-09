@@ -161,11 +161,11 @@ public class Graph_GUI extends Thread {
      *
      */
     public void openCanvas(){
-        StdDraw.setCanvasSize(800,800);
+        StdDraw.setCanvasSize(1024,512);
         Range x = findRangeX();
         Range y = findRangeY();
-        StdDraw.setXscale(x.get_min()-(x.get_max()-x.get_min())*0.2,x.get_max()*1.1);
-        StdDraw.setYscale(y.get_min()-(y.get_max()-y.get_min())*0.2,y.get_max()*1.1);
+        StdDraw.setXscale(x.get_min()-0.002,x.get_max()+0.002);
+        StdDraw.setYscale(y.get_min()-0.002,y.get_max()+0.002);
         printGraph();
     }
 
@@ -174,7 +174,6 @@ public class Graph_GUI extends Thread {
      *
      */
     public  void printGraph(){
-        StdDraw.clear();
         Range xx = findRangeX();
         Range yy = findRangeY();
         double rightScaleX = ((xx.get_max()-xx.get_min())*0.04);
@@ -187,7 +186,7 @@ public class Graph_GUI extends Thread {
             while (it.hasNext()) {
                 node_data temp = (node_data)it.next();
                 Point3D p = temp.getLocation();
-                StdDraw.filledCircle(p.x(), p.y(),rightScaleX*0.2);
+                StdDraw.filledCircle(p.x(), p.y(),rightScaleX*0.1);
                 StdDraw.text(p.x(), p.y() +rightScaleX*0.3, "" + temp.getKey());
             }
             StdDraw.setPenColor(Color.BLACK);
@@ -212,16 +211,15 @@ public class Graph_GUI extends Thread {
                             double x = 0.2*srcP.x()+0.8*dstP.x();
                             double y = 0.2*srcP.y() + 0.8*dstP.y();
                             StdDraw.setPenColor(Color.BLACK);
-                            StdDraw.text(x,y, "" + weight);
+                            StdDraw.text(x,y, "" +(int)weight);
 
                             StdDraw.setPenColor(Color.YELLOW);
                             StdDraw.setPenRadius(0.15);
                             double x1 = 0.1*srcP.x()+0.9*dstP.x();
                             double y1 = 0.1*srcP.y()+0.9*dstP.y();
-                            StdDraw.filledCircle(x1,y1,rightScaleX*0.2);
+                            StdDraw.filledCircle(x1,y1,rightScaleX*0.1);
 
                         }
-
                     }
                 }
             }
