@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import gui.Graph_GUI;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,7 +30,9 @@ import oop_dataStructure.oop_graph;
  * @author boaz.benmoshe
  *
  */
-public class SimpleGameClient {
+public class SimpleGameClient implements Runnable {
+	Thread t;
+
 	public static void main(String[] a) {
 		test1();}
 	public static void test1() {
@@ -38,6 +41,7 @@ public class SimpleGameClient {
 		String g = game.getGraph();
 		OOP_DGraph gg = new OOP_DGraph();
 		gg.init(g);
+
 		String info = game.toString();
 		JSONObject line;
 		try {
@@ -112,4 +116,8 @@ public class SimpleGameClient {
 		return ans;
 	}
 
+	@Override
+	public void run() {
+
+	}
 }

@@ -1,6 +1,7 @@
 package utils;
 import dataStructure.Edge;
 import dataStructure.node_data;
+import gameClient.MyGameGUI;
 import gui.Graph_GUI;
 
 import javax.imageio.ImageIO;
@@ -638,6 +639,7 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	 *         {@code canvasHeight} are positive
 	 */
 	public static Graph_GUI g;
+	public static MyGameGUI mgg;
 	public static int isRepaint =0;
 
 	public static void setCanvasSize(int canvasWidth, int canvasHeight) {
@@ -1754,7 +1756,8 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 				break;
 
 			case "Clean...":
-				StdDraw.g= new Graph_GUI();
+			//	StdDraw.g= new Graph_GUI();
+				//mgg.MyGameGUI(13);
 				break;
 
 			case "TSP":

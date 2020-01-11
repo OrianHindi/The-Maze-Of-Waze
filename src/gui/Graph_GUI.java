@@ -5,6 +5,7 @@ import dataStructure.DGraph;
 import dataStructure.Node;
 import dataStructure.edge_data;
 import dataStructure.node_data;
+import elements.Fruit;
 import utils.Point3D;
 import utils.Range;
 import utils.StdDraw;
@@ -25,7 +26,7 @@ public class Graph_GUI extends Thread {
         graph= new DGraph();
         graph_algo= new Graph_Algo();
         StdDraw.g=this;
-        this.openCanvas();
+        this.openGraph();
         ModeCount=graph.getMC();
         this.start();
     }
@@ -115,7 +116,14 @@ public class Graph_GUI extends Thread {
         }
     }
 
-
+//    public void printR(ArrayList<Robot> p){
+//        for (Robot robot: p) {
+//            StdDraw.picture(robot.pos.x(),robot.pos.y(),robot.img,0.001,0.001);
+//        }
+//    }
+//    public void print(ArrayList<Fruit> p){
+//
+//    }
     public Range findRangeX(){
         if(graph.nodeSize()!=0) {
             double min = Integer.MAX_VALUE;
@@ -164,9 +172,23 @@ public class Graph_GUI extends Thread {
         StdDraw.setCanvasSize(1024,512);
         Range x = findRangeX();
         Range y = findRangeY();
+        System.out.println(x.get_min() + "," + x.get_max());
+        System.out.println(y.get_min() + "," + y.get_max());
         StdDraw.setXscale(x.get_min()-0.002,x.get_max()+0.002);
         StdDraw.setYscale(y.get_min()-0.002,y.get_max()+0.002);
+        StdDraw.enableDoubleBuffering();
         printGraph();
+
+
+    }
+    public void openGraph(){
+        StdDraw.setCanvasSize(1024,512);
+        StdDraw.clear(Color.BLUE);
+        StdDraw.setYscale(-51,50);
+        StdDraw.setXscale(-51,50);
+        StdDraw.picture(0,0,"Maze.png");
+
+
     }
 
     /**
@@ -174,10 +196,9 @@ public class Graph_GUI extends Thread {
      *
      */
     public  void printGraph(){
-        Range xx = findRangeX();
-        Range yy = findRangeY();
-        double rightScaleX = ((xx.get_max()-xx.get_min())*0.04);
-        double rightScaleY =  ((yy.get_max()-yy.get_min())*0.04);
+        StdDraw.clear();
+        double rightScaleX = ((xRange.get_max()-xRange.get_min())*0.04);
+        double rightScaleY =  ((yRange.get_max()-yRange.get_min())*0.04);
         StdDraw.setPenColor(Color.BLUE);
         StdDraw.setPenRadius(0.15);
         DGraph d = this.graph;
@@ -211,7 +232,7 @@ public class Graph_GUI extends Thread {
                             double x = 0.2*srcP.x()+0.8*dstP.x();
                             double y = 0.2*srcP.y() + 0.8*dstP.y();
                             StdDraw.setPenColor(Color.BLACK);
-                            StdDraw.text(x,y, "" +(int)weight);
+                            StdDraw.text(x,y, "" +Math.round(weight%2));
 
                             StdDraw.setPenColor(Color.YELLOW);
                             StdDraw.setPenRadius(0.15);
@@ -226,6 +247,7 @@ public class Graph_GUI extends Thread {
 
         }
 
+       // StdDraw.show();
     }
 
     public List<node_data> TSP(List<Integer> targets){
