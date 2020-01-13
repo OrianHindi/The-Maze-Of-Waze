@@ -696,90 +696,14 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	private static JMenuBar createMenuBar() {
 		JMenuBar menuBar = new JMenuBar();
 
-		/**menu bar - load and save**/
-		JMenu file = new JMenu("File");
-		menuBar.add(file);
+//		JMenu Game = new JMenu("Game");
+//		menuBar.add(Game);
 
-		JMenuItem save = new JMenuItem("Save...");
-		file.add(save);
-		save.addActionListener(std);
-		save.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,
-				Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+		JMenuItem StartGame = new JMenuItem("Start Game");
+		menuBar.add(StartGame);
 
-		JMenuItem load = new JMenuItem("Load...");
-		file.add(load);
-		load.addActionListener(std);
-		load.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L,
-				Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-
-		JMenuItem clean = new JMenuItem("Clean...");
-		file.add(clean);
-		clean.addActionListener(std);
-
-
-		/**menu bar - Edit**/
-		JMenu EDIT = new JMenu("Edit");
-		menuBar.add(EDIT);
-
-		JMenu node = new JMenu("Node");
-		EDIT.add(node);
-		JMenuItem add_node = new JMenuItem("Add Node");
-		node.add(add_node);
-		add_node.addActionListener(std);
-//		JMenuItem add_ByClick = new JMenuItem("Add By Click");
-//		add_node.add(add_ByClick);
-//		add_ByClick.addActionListener(std);
-//		JMenuItem add_ByPoint= new JMenuItem("Add By Point");
-//		add_node.add(add_ByPoint);
-//		add_ByPoint.addActionListener(std);
-
-		JMenu edge = new JMenu("Edge");
-		EDIT.add(edge);
-		JMenuItem add_edge = new JMenuItem("Add Edge");
-		edge.add(add_edge);
-		add_edge.addActionListener(std);
-		add_edge.addMenuDragMouseListener(std);
-
-		JMenuItem remove_node = new JMenuItem("Remove Node");
-		node.add(remove_node);
-		remove_node.addActionListener(std);
-
-
-//		JMenuItem removeclick = new JMenuItem("Remove By Click");
-//		remove_node.add(removeclick);
-//		removeclick.addActionListener(std);
-//
-//		JMenuItem removepoint = new JMenuItem("Remove By Key");
-//		remove_node.add(removepoint);
-//		removepoint.addActionListener(std);
-
-
-		JMenuItem remove_edge = new JMenuItem("Remove Edge");
-		edge.add(remove_edge);
-		remove_edge.addActionListener(std);
-
-
-		/**menu bar - Algo**/
-		JMenu Algo = new JMenu("Algo");
-		menuBar.add(Algo);
-
-		JMenuItem isConnected = new JMenuItem("isConnected");
-		Algo.add(isConnected);
-		isConnected.addActionListener(std);
-
-		JMenuItem ShortestPath  = new JMenuItem("ShortestPathDist");
-		Algo.add(ShortestPath);
-		ShortestPath.addActionListener(std);
-
-		JMenuItem ShortestPathList = new JMenuItem("ShortestPathList");
-		Algo.add(ShortestPathList);
-		ShortestPathList.addActionListener(std);
-
-		JMenuItem TSP = new JMenuItem("TSP");
-		Algo.add(TSP);
-		TSP.addActionListener(std);
-
-
+		JMenuItem EndGame = new JMenuItem("Finish Game");
+		menuBar.add(EndGame);
 		return menuBar;
 	}
 
@@ -1736,6 +1660,9 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	public void actionPerformed(ActionEvent e) {
 		String action = e.getActionCommand();
 		switch(action){
+			case "Start Game":
+				System.out.println("game have been start");
+				break;
 			case "Save...":
 				FileDialog save_window = new FileDialog(StdDraw.frame,"Save Graph",FileDialog.SAVE);
 				save_window.setVisible(true);

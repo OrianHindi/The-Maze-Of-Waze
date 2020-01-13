@@ -119,6 +119,9 @@ public class Fruit implements FruitInterface {
     public int getType(){
         return this.type;
     }
+    public double getValue(){
+        return  this.value;
+    }
 
     public ArrayList<Fruit> copy(List<Fruit> copy){
         ArrayList<Fruit> ans = new ArrayList<>(copy.size());

@@ -79,10 +79,10 @@ public class MyGameGUI implements Runnable {
             toAddFruit.printFruit(this.foodss);
             StdDraw.show();
         }
-        System.out.println("game is over");
+        System.out.println("game is over" + this.players.get(0).getValue());
     }
 
-    public  void moveRobots(game_service game,DGraph g){
+    public void moveRobots(game_service game,DGraph g){
         List<String> log = game.move();
         if(log!=null){
             long t = game.timeToEnd();
@@ -94,11 +94,10 @@ public class MyGameGUI implements Runnable {
                     int robID = tomove.getInt("id");
                     int src = tomove.getInt("src");
                     int dest = tomove.getInt("dest");
-                    System.out.println("first dest is:" +dest);
+
 
                     if(dest == -1){
-                        dest=toaddRobot.getNextNode(g,this.foodss);
-                        System.out.println("dest is:" + dest);
+                        dest=this.players.get(i).getNextNode(g,this.foodss);
                         game.chooseNextEdge(robID,dest);
                     }
 
