@@ -36,9 +36,6 @@ public class MyGameGUI extends Thread {
         openWindow();
     }
 
-    public void updateGraph(String JSon String){
-
-    }
     public void startGame(int senario)  {
         game_service game = Game_Server.getServer(senario); // you have [0,23] games
         this.game1=game;
