@@ -282,6 +282,7 @@ public class MyGameGUI extends Thread {
     }
 
     public static void main(String[] args) {
+        int x = 3;
         MyGameGUI p = new MyGameGUI();
    //    p.startGame(11);
     }
