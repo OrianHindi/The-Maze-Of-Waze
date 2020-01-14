@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import utils.Point3D;
 import utils.StdDraw;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -76,10 +77,13 @@ public class Robot implements RobotInterface {
         arr.sort(m);
     }
 
-    public int getNextNode1(graph g,List<Fruit> arr){
-
-
-        return 0;
+    public ArrayList<Robot> fillRobotList(List<String> arr){
+        ArrayList<Robot> temp = new ArrayList<>();
+        int indexForPic=0;
+        for (String rob:arr) {
+            temp.add(initFromJson(rob,indexForPic++));
+        }
+        return temp;
     }
 
     public int getNextNode(graph g, List<Fruit> arr ) {
@@ -92,9 +96,7 @@ public class Robot implements RobotInterface {
         for (Fruit fruit: arr) {
             if (fruit.getTag() == 0) {
                 temp = fruit.getFruitEdge(g, fruit);
-                System.out.println("edge after get :" + temp);
                 if (fruit.getType() == -1) {
-
                     if (temp.getDest() > temp.getSrc()) {
                         disFromRob = p.shortestPathDist(this.src, temp.getDest());
                         whereTo = temp.getSrc();
@@ -145,7 +147,6 @@ public class Robot implements RobotInterface {
 
             return ans2.get(1).getKey();
         }
-        System.out.println(ans + " we go to: " + finalWhereTo + "robotid is: " + this.ID);
         return ans.get(1).getKey();
     }
 

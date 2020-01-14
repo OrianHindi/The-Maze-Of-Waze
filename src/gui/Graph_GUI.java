@@ -89,7 +89,7 @@ public class Graph_GUI extends Thread {
      *
      */
     public void openCanvas(){
-       StdDraw.setCanvasSize(1024,512);
+        StdDraw.setCanvasSize(1024,512);
         Range x = findRangeX();
         Range y = findRangeY();
         System.out.println(x.get_min() + "," + x.get_max());
@@ -112,13 +112,14 @@ public class Graph_GUI extends Thread {
      *
      */
     public void printGraph(){
-        StdDraw.clear();
+
         double rightScaleX = ((xRange.get_max()-xRange.get_min())*0.04);
         double rightScaleY =  ((yRange.get_max()-yRange.get_min())*0.04);
         StdDraw.setPenColor(Color.BLUE);
         StdDraw.setPenRadius(0.15);
         DGraph d = this.graph;
         if(d!=null) {
+
             Iterator it = d.getV().iterator();
             while (it.hasNext()) {
                 node_data temp = (node_data)it.next();
@@ -167,5 +168,8 @@ public class Graph_GUI extends Thread {
     public List<node_data> TSP(List<Integer> targets){
         graph_algo.init(graph);
         return graph_algo.TSP(targets);
+    }
+    public void setGraph(DGraph d){
+        graph=d;
     }
 }

@@ -66,8 +66,12 @@ public class Fruit implements FruitInterface {
         return temp;
     }
 
-    public void printFruit2(String Json){
-
+    public ArrayList<Fruit> fillFruitList(List<String> arr){
+        ArrayList<Fruit> temp = new ArrayList<>();
+        for (String fruit:arr) {
+            temp.add(initFromJson(fruit));
+        }
+        return temp;
     }
     @Override
     public void printFruit(List<Fruit> fruitArr) {

@@ -4,59 +4,74 @@ import Server.Game_Server;
 import Server.game_service;
 import dataStructure.DGraph;
 import dataStructure.edge_data;
+import dataStructure.node_data;
 import elements.Fruit;
 import elements.Robot;
 import gui.Graph_GUI;
 import org.json.JSONException;
 import org.json.JSONObject;
 import utils.Point3D;
+import utils.Range;
 import utils.StdDraw;
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-public class MyGameGUI implements Runnable {
-    private Graph_GUI Ggui;
+public class MyGameGUI extends Thread {
     private DGraph Ggraph;
     private ArrayList<Robot> players;
     private ArrayList<Fruit> foodss ;
     private Fruit toAddFruit= new Fruit();
     private Robot toaddRobot= new Robot();
     private game_service game1;
-    private Thread t1;
+    private static Range xRange= new Range(0,0);
+    private static Range yRange= new Range(0,0);
+
 
 
     public MyGameGUI() {
-         StdDraw.mgg = this;
-        Graph_GUI p= new Graph_GUI();
-
+        StdDraw.mgg=this;
+        openWindow();
     }
 
-    public void startGame(int senario){
+    public void updateGraph(String JSon String){
 
+    }
+    public void startGame(int senario)  {
         game_service game = Game_Server.getServer(senario); // you have [0,23] games
         this.game1=game;
         String g = game.getGraph();
-        DGraph gg = new DGraph();
-        gg.init(g);
-        this.Ggraph=gg;
-        this.Ggui = new Graph_GUI(this.Ggraph);
+        DGraph d = new DGraph();
+        d.init(g);
+        this.Ggraph=d; // set our Graph to the graph that have been built from JSON that represent the graph of scenario.
+        this.findRange();  // get the Scale of the graph;
         String info = game.toString();
+        System.out.println(info);
         List<String> fruits = this.game1.getFruits();
-        this.foodss= new ArrayList<>(fruits.size());
-        System.out.println(fruits.size());
-        for (String fruit:fruits) {
-            System.out.println(fruit);
-            this.foodss.add(toAddFruit.initFromJson(fruit));
-        }
+        this.foodss= toAddFruit.fillFruitList(fruits);  //init the Fruits the our ArrayList fruit.
+
+
         ArrayList<Fruit> copied = toAddFruit.copy(this.foodss);
         int numRobs=0;
-        try {
+        try {   //get the number of robots from server.
             JSONObject game_info = new JSONObject(info);
             JSONObject robots = game_info.getJSONObject("GameServer");
             numRobs = robots.getInt("robots");
-            this.players= new ArrayList<>(numRobs);
         }catch(Exception e){e.printStackTrace();}
+
+        placeRobots(numRobs,copied);
+
+        List<String> robList = game.getRobots();
+        this.players=toaddRobot.fillRobotList(robList);
+        this.game1.startGame();
+        this.start();
+
+
+    }
+
+    private void placeRobots(int numRobs, ArrayList<Fruit> copied) {
         for (int i = 0; i <numRobs; i++) {
             edge_data p = toAddFruit.getFruitEdge(this.Ggraph,copied.get(0));
             if(copied.get(0).getType()==-1){
@@ -67,27 +82,6 @@ public class MyGameGUI implements Runnable {
             }
             copied.remove(0);
         }
-        List<String> robList = game.getRobots();
-        int indexForPic=0;
-        for (String rob:robList) {
-            this.players.add(toaddRobot.initFromJson(rob,indexForPic++));
-        }
-        game.startGame();
-        while(game.isRunning()){
-            updateFruits();
-            updateRobots();
-            moveRobots(this.game1,this.Ggraph);
-            this.Ggui.printGraph();
-            toaddRobot.printRobots(this.players);
-            toAddFruit.printFruit(this.foodss);
-            StdDraw.show();
-
-        }
-        double checksum =0;
-        for (Robot rob: this.players) {
-            checksum+=rob.getValue();
-        }
-        System.out.println("game is over" + game.toString());
     }
 
     public void moveRobots(game_service game,DGraph g){
@@ -131,217 +125,173 @@ public class MyGameGUI implements Runnable {
             }
         }
     }
-
-    public static void main(String[] args) {
-        MyGameGUI p = new MyGameGUI();
-      //   p.startGame(5);
+    public void finishGame(){
+        StdDraw.setCanvasSize(1024,512);
+        StdDraw.clear(Color.BLUE);
+        StdDraw.setYscale(-51,50);
+        StdDraw.setXscale(-51,50);
+        StdDraw.picture(0,0,"Maze.png");
+        StdDraw.show();
     }
+
+
 
 
     @Override
     public void run() {
+        while(this.game1.isRunning()){
+            updateFruits();
+            updateRobots();
+            moveRobots(this.game1,this.Ggraph);
+            this.printGraph();
+            toaddRobot.printRobots(this.players);
+            toAddFruit.printFruit(this.foodss);
+            StdDraw.show();
+            try{
+                sleep(10);
+            }catch (Exception e){e.printStackTrace();}
+
+        }
+        System.out.println("game is over" + this.game1.toString());
+
+    }
+    public Range findRangeX(){
+        if(this.Ggraph.nodeSize()!=0) {
+            double min = Integer.MAX_VALUE;
+            double max = Integer.MIN_VALUE;
+            Collection<node_data> V = this.Ggraph.getV();
+            for (node_data node : V) {
+                if (node.getLocation().x() > max) max = node.getLocation().x();
+                if (node.getLocation().x() < min) min = node.getLocation().x();
+            }
+            Range ans = new Range(min, max);
+            xRange = ans;
+            return ans;
+        }
+        else{
+            Range Default = new Range(-100,100);
+            xRange=Default;
+            return Default;
+        }
+    }
+    public Range findRangeY(){
+        if(this.Ggraph.nodeSize()!=0) {
+            double min = Integer.MAX_VALUE;
+            double max = Integer.MIN_VALUE;
+            Collection<node_data> V = this.Ggraph.getV();
+            for (node_data node : V) {
+                if (node.getLocation().y() > max) max = node.getLocation().y();
+                if (node.getLocation().y() < min) min = node.getLocation().y();
+            }
+            Range ans = new Range(min, max);
+            yRange = ans;
+            return ans;
+        }
+        else{
+            Range Default = new Range(-100,100);
+            yRange=Default;
+            return Default;
+        }
+    }
+    /**
+     * open the window of the graph printed
+     *
+     */
+    public void findRange(){
+        Range x = findRangeX();
+        Range y = findRangeY();
+        StdDraw.setXscale(x.get_min()-0.002,x.get_max()+0.002);
+        StdDraw.setYscale(y.get_min()-0.002,y.get_max()+0.002);
+
+    }
+    public void openWindow(){
+        StdDraw.setCanvasSize(1024,512);
+        StdDraw.clear(Color.BLUE);
+        StdDraw.setYscale(-51,50);
+        StdDraw.setXscale(-51,50);
+        StdDraw.picture(0,0,"Maze.png");
+        int senario=0;
+        String senarioString = JOptionPane.showInputDialog(null,"Please choose a Game Senario");
+        try{
+            senario=Integer.parseInt(senarioString);
+        }catch(Exception e1){e1.printStackTrace();}
+        String[] chooseGame = {"Manually Game","Auto Game"};
+        Object selctedGame = JOptionPane.showInputDialog(null,"Choose a Game mode","Message",JOptionPane.INFORMATION_MESSAGE,null,chooseGame,chooseGame[0]);
+        if(selctedGame=="Manually Game") {
+            StdDraw.clear();
+            StdDraw.enableDoubleBuffering();
+            startGame(senario);
+        }
+
+
 
     }
 
+    /**
+     * this function prints the graph
+     *
+     */
+    public void printGraph(){
+        StdDraw.clear();
+        double rightScaleX = ((xRange.get_max()-xRange.get_min())*0.04);
+        double rightScaleY =  ((yRange.get_max()-yRange.get_min())*0.04);
+        StdDraw.setPenColor(Color.BLUE);
+        StdDraw.setPenRadius(0.15);
+        DGraph d = this.Ggraph;
+        if(d!=null) {
+            Iterator it = d.getV().iterator();
+            while (it.hasNext()) {
+                node_data temp = (node_data)it.next();
+                Point3D p = temp.getLocation();
+                StdDraw.filledCircle(p.x(), p.y(),rightScaleX*0.1);
+                StdDraw.text(p.x(), p.y() +rightScaleX*0.3, "" + temp.getKey());
+            }
+            StdDraw.setPenColor(Color.BLACK);
+            StdDraw.setPenRadius(0.003);
+            Iterator it1 = d.getV().iterator();
+            while(it1.hasNext()){
+                node_data temp1 = (node_data)it1.next();
+                if(d.getE(temp1.getKey())!=null){
+                    Iterator it2 = d.getE(temp1.getKey()).iterator();
+                    while(it2.hasNext()){
+                        edge_data temp2 = (edge_data)it2.next();
+                        if(temp2!=null){
+                            StdDraw.setPenRadius(0.003);
+                            StdDraw.setPenColor(Color.RED);
+                            double weight = Math.round(temp2.getWeight()*100.0)/100.0;
+                            node_data srcNode = d.getNode(temp2.getSrc());
+                            node_data dstNode = d.getNode(temp2.getDest());
+                            Point3D srcP = srcNode.getLocation();
+                            Point3D dstP = dstNode.getLocation();
+                            StdDraw.line(srcP.x(), srcP.y(), dstP.x(), dstP.y());
+
+                            double x = 0.2*srcP.x()+0.8*dstP.x();
+                            double y = 0.2*srcP.y() + 0.8*dstP.y();
+                            StdDraw.setPenColor(Color.BLACK);
+                            StdDraw.text(x,y, "" +weight);
+
+                            StdDraw.setPenColor(Color.YELLOW);
+                            StdDraw.setPenRadius(0.15);
+                            double x1 = 0.1*srcP.x()+0.9*dstP.x();
+                            double y1 = 0.1*srcP.y()+0.9*dstP.y();
+                            StdDraw.filledCircle(x1,y1,rightScaleX*0.1);
+
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+    public static void main(String[] args) {
+        MyGameGUI p = new MyGameGUI();
+   //    p.startGame(11);
+    }
+    public game_service getGame1(){
+        return this.game1;
+    }
+
+
 }
-//
-//    public void MyGameGUI(int GameSenario){
-//        game_service game = Game_Server.getServer(GameSenario);
-//        String stringGraph = game.getGraph();
-//        this.Ggraph=new DGraph();
-//        this.Ggraph.init(stringGraph);
-//        this.Ggui= new Graph_GUI(this.Ggraph);
-//        String info = game.toString();
-//
-//        System.out.println(info);
-//        JSONObject infoGame;
-//        try{
-//            infoGame= new JSONObject(info);
-//            JSONObject ROBOTS = infoGame.getJSONObject("GameServer");
-//            int numrobs = ROBOTS.getInt("robots");
-//            int numfruits = ROBOTS.getInt("fruits");
-//            this.food= new ArrayList<>(numfruits);
-//            this.players= new ArrayList<>(numrobs);
-//            for (int i = 0; i <numrobs ; i++) {
-//                game.addRobot(i);
-//            }
-//        }
-//        catch(Exception e){
-//            e.printStackTrace();
-//        }
-//        List<String> foods = game.getFruits();
-//        for (String food:foods) {
-//            try {
-//                JSONObject fruitt = new JSONObject(food);
-//                JSONObject fruittt= fruitt.getJSONObject("Fruit");
-//                double value = fruittt.getDouble("value");
-//                String pos =fruittt.getString("pos");
-//                int type = fruittt.getInt("type");
-//                Point3D ps = new Point3D(pos);
-//                StdDraw.picture(ps.x(),ps.y(),"coin.png",0.001,0.001);
-//            }
-//            catch(Exception pe){
-//
-//            }
-//        }
-//
-//
-//        List<String> robots = game.getRobots();
-//        int number=1;
-//        for (String robot:robots) {
-//            try {
-//                System.out.println(robot);
-//                JSONObject temp = new JSONObject(robot);
-//                JSONObject robotPlace =temp.getJSONObject("Robot");
-//                String locatiion = robotPlace.getString("pos");
-//                int id = robotPlace.getInt("id");
-//                Point3D rp = new Point3D(locatiion);
-//                this.players.add(new Player(id,rp,"Robot"+ number + ".png"));
-//                System.out.println(rp);
-//                StdDraw.picture(rp.x(),rp.y(),"Robot1.png",0.001,0.001);
-//                StdDraw.picture(rp.x()+0.005,rp.y()+0.005,"Audi.png",0.001,0.001);
-//
-//            }
-//            catch (Exception p){
-//
-//            }
-//        }
-//
-//        for (Player player:this.players) {
-//            int id= player.getID();
-//            Point3D pos = player.getLocation();
-//            System.out.println("id is:" + id + "pos is: " + pos.toString());
-//        }
-//
-//
-//    }
 
-
-//bboaz code
-
-
-//    public void test1() {
-//        int scenario_num = 4;
-//        game_service game = Game_Server.getServer(scenario_num); // you have [0,23] games
-//        this.game1=game;
-//        String g = game.getGraph();
-//        DGraph gg = new DGraph();
-//        gg.init(g);
-//        this.Ggraph=gg;
-//        this.Ggui = new Graph_GUI(gg);
-//        String info = game.toString();
-//        JSONObject line;
-//        try {
-//            line = new JSONObject(info);
-//            JSONObject ttt = line.getJSONObject("GameServer");
-//            int rs = ttt.getInt("robots");
-//            System.out.println(info);
-//            System.out.println(g);
-//            int src_node = 0;  // arbitrary node, you should start at one of the fruits
-//            for(int a = 0;a<rs;a++) {
-//                game.addRobot(src_node+a);
-//            }
-//        }
-//        catch (JSONException e) {e.printStackTrace();}
-//        game.startGame();
-//        int check =0;
-//        while (game.isRunning()){
-//            this.Ggui.printGraph();
-//            moveRobots(game,gg);
-//            if(check==0){
-//                this.t1 = new Thread(this);
-//                this.t1.start();
-//                check++;
-//            }
-//        }
-//
-//        String results = game.toString();
-//        System.out.println("Game Over: "+results);
-//    }
-//    /**
-//     * Moves each of the robots along the edge,
-//     * in case the robot is on a node the next destination (next edge) is chosen (randomly).
-//     * @param game
-//     * @param gg
-//    //* @param log
-//     */
-//    private static void moveRobots(game_service game, DGraph gg) {
-//        List<String> log = game.move();
-//        //   System.out.println("size of robots" +log.size());
-//        if(log!=null) {
-//            long t = game.timeToEnd();
-//            for(int i=0;i<log.size();i++) {
-//                String robot_json = log.get(i);
-//                try {
-//                    JSONObject line = new JSONObject(robot_json);
-//                    JSONObject ttt = line.getJSONObject("Robot");
-//                    int rid = ttt.getInt("id");
-//                    int src = ttt.getInt("src");
-//                    int dest = ttt.getInt("dest");
-//                    String ps = ttt.getString("pos");
-//                    Point3D pp = new Point3D(ps);
-//                    StdDraw.picture(pp.x(),pp.y(),"Robot1.png",0.001,0.001);
-//                    StdDraw.show();
-//
-//                    if(dest==-1) {
-//                        dest = nextNode(gg, src);
-//                        game.chooseNextEdge(rid, dest);
-////                        System.out.println("Turn to node: "+dest+"  time to end:"+(t/1000));
-////                        System.out.println(ttt);
-//                    }
-//
-//                }
-//                catch (JSONException e) {e.printStackTrace();}
-//            }
-//        }
-//    }
-//    /**
-//     * a very simple random walk implementation!
-//     * @param g
-//     * @param src
-//     * @return
-//     */
-//    private static int nextNode(DGraph g, int src) {
-//        int ans = -1;
-//        Collection<edge_data> ee = g.getE(src);
-//        Iterator<edge_data> itr = ee.iterator();
-//        int s = ee.size();
-//        int r = (int)(Math.random()*s);
-//        int i=0;
-//        while(i<r) {itr.next();i++;}
-//        ans = itr.next().getDest();
-//        return ans;
-//    }
-
-
-//thread
-
-
-//while (game1.isRunning()) {
-//        List<String> foods = game1.getFruits();
-//        if (foods != null) {
-//            System.out.println("num of fruits" + foods.size());
-//            for (String food : foods) {
-//                try {
-//                    JSONObject fruitt = new JSONObject(food);
-//                    JSONObject fruittt = fruitt.getJSONObject("Fruit");
-//                    double value = fruittt.getDouble("value");
-//                    String pos = fruittt.getString("pos");
-//                    int type = fruittt.getInt("type");
-//                    Point3D ps = new Point3D(pos);
-//                    System.out.println("fruit pos" + pos);
-//                    StdDraw.picture(ps.x(), ps.y(), "coin.png", 0.001, 0.001);
-//
-//                } catch (Exception pe) {
-//
-//                }
-//            }
-//            try {
-//                t1.wait(300);
-//            } catch (Exception psa) {
-//
-//            }
-//        }
-//    }
-//
-//}
