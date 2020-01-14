@@ -60,8 +60,8 @@ public class Fruit implements FruitInterface {
             temp.value= fruitt.getDouble("value");
             String pos = fruitt.getString("pos");
             temp.pos= new Point3D(pos);
-            if(temp.type== -1) temp.img="coin.png";
-            else temp.img= "coin.png";
+            if(temp.type== -1) temp.img="Fruit1.png";
+            else temp.img= "Fruit2.png";
         }catch (Exception e){ e.printStackTrace();}
         return temp;
     }
@@ -76,7 +76,7 @@ public class Fruit implements FruitInterface {
     @Override
     public void printFruit(List<Fruit> fruitArr) {
         for (Fruit fruit: fruitArr) {
-            StdDraw.picture(fruit.pos.x(),fruit.pos.y(),fruit.img,0.001,0.001);
+            StdDraw.picture(fruit.pos.x(),fruit.pos.y(),fruit.img,0.0009,0.0009);
         }
 
     }

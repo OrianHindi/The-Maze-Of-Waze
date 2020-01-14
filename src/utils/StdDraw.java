@@ -684,7 +684,7 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 		frame.addKeyListener(std);    // JLabel cannot get keyboard focus
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);            // closes all windows
-	//	frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);      // closes only current window
+		//	frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);      // closes only current window
 		frame.setTitle("Standard Draw");
 		frame.setJMenuBar(createMenuBar());
 		frame.pack();
@@ -699,7 +699,7 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 		JMenu Game = new JMenu("Game");
 		menuBar.add(Game);
 
-		JMenuItem StartGame = new JMenuItem("Start Game");
+		JMenuItem StartGame = new JMenuItem("New Game");
 		Game.add(StartGame);
 		StartGame.addActionListener(std);
 
@@ -1669,8 +1669,24 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	public void actionPerformed(ActionEvent e) {
 		String action = e.getActionCommand();
 		switch(action){
-			case "Start Game":
-				mgg.openWindow();
+			case "New Game":
+				StdDraw.clear();
+				mgg.getGame1().stopGame();
+				mgg.finishGame();
+				mgg = new MyGameGUI(1);
+				int senario=0;
+				String senarioString = JOptionPane.showInputDialog(null,"Please choose a Game Senario");
+				try{
+					senario=Integer.parseInt(senarioString);
+				}catch(Exception e1){e1.printStackTrace();}
+				String[] chooseGame = {"Manually Game","Auto Game"};
+				Object selctedGame = JOptionPane.showInputDialog(null,"Choose a Game mode","Message",JOptionPane.INFORMATION_MESSAGE,null,chooseGame,chooseGame[0]);
+				if(selctedGame=="Manually Game") {
+
+				}
+				else {
+					mgg.startGame(senario);
+				}
 				break;
 
 			case "Finish Game":

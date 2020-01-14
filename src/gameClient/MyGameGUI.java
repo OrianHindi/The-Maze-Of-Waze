@@ -35,6 +35,10 @@ public class MyGameGUI extends Thread {
         StdDraw.mgg=this;
         openWindow();
     }
+    public MyGameGUI (int x){
+        StdDraw.mgg=this;
+
+    }
 
     public void startGame(int senario)  {
         game_service game = Game_Server.getServer(senario); // you have [0,23] games
@@ -214,10 +218,13 @@ public class MyGameGUI extends Thread {
         }catch(Exception e1){e1.printStackTrace();}
         String[] chooseGame = {"Manually Game","Auto Game"};
         Object selctedGame = JOptionPane.showInputDialog(null,"Choose a Game mode","Message",JOptionPane.INFORMATION_MESSAGE,null,chooseGame,chooseGame[0]);
-        if(selctedGame=="Manually Game") {
+        if(selctedGame=="Auto Game") {
             StdDraw.clear();
             StdDraw.enableDoubleBuffering();
             startGame(senario);
+        }
+        else{
+
         }
 
 
