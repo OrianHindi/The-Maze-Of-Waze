@@ -683,8 +683,8 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 		frame.setContentPane(draw);
 		frame.addKeyListener(std);    // JLabel cannot get keyboard focus
 		frame.setResizable(false);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);            // closes all windows
-		// frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);      // closes only current window
+		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);            // closes all windows
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);      // closes only current window
 		frame.setTitle("Standard Draw");
 		frame.setJMenuBar(createMenuBar());
 		frame.pack();
@@ -696,14 +696,22 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	private static JMenuBar createMenuBar() {
 		JMenuBar menuBar = new JMenuBar();
 
-//		JMenu Game = new JMenu("Game");
-//		menuBar.add(Game);
+		JMenu Game = new JMenu("Game");
+		menuBar.add(Game);
 
 		JMenuItem StartGame = new JMenuItem("Start Game");
-		menuBar.add(StartGame);
+		Game.add(StartGame);
+		StartGame.addActionListener(std);
 
 		JMenuItem EndGame = new JMenuItem("Finish Game");
-		menuBar.add(EndGame);
+		Game.add(EndGame);
+
+		JMenu Save = new JMenu("Save");
+		menuBar.add(Save);
+
+		JMenuItem saveToKML = new JMenuItem("Save To KML");
+		Save.add(saveToKML);
+
 		return menuBar;
 	}
 
@@ -1661,229 +1669,15 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 		String action = e.getActionCommand();
 		switch(action){
 			case "Start Game":
+				JFrame getSenario = new JFrame();
 				System.out.println("game have been start");
-				break;
-			case "Save...":
-				FileDialog save_window = new FileDialog(StdDraw.frame,"Save Graph",FileDialog.SAVE);
-				save_window.setVisible(true);
-				String Save_name= save_window.getFile();
-				if(Save_name!= null){
-					g.save(save_window.getDirectory() +File.separator + save_window.getFile());
-				}
-				break;
-
-			case "Load...":
-				FileDialog load_window = new FileDialog(StdDraw.frame,"Load Graph", FileDialog.LOAD);
-				load_window.setVisible(true);
-				String load_name = load_window.getFile();
-				if(load_name!=null){
-					g.load(load_window.getDirectory() + File.separator + load_window.getFile());
-					g.openCanvas();
-				}
-				break;
-
-			case "Clean...":
-			//	StdDraw.g= new Graph_GUI();
-				//mgg.MyGameGUI(13);
-				break;
-
-			case "TSP":
-				if(isRepaint==1){
-					g.printGraph();
-					isRepaint=0;
-				}
-				JFrame TSPLIST = new JFrame();
-				String list = JOptionPane.showInputDialog(TSPLIST,"Please enter keys.","Shape of x,y,z,w",1);
-				String[] arr = list.split(",");
-				List<Integer> qq = new LinkedList<>();
-				StringBuilder pathString = new StringBuilder();
-				for (String str: arr) {
-					qq.add(Integer.parseInt(str));
-				}
-				ArrayList<node_data> show= (ArrayList)g.TSP(qq);
-				if(show == null){
-					JOptionPane.showMessageDialog(TSPLIST,"There is no a path between the nodes.");
-					break;
-				}
-				pathString.append("" + show.get(0).getKey() + "->");
-				for (int i = 1; i <show.size() ; i++) {
-					if(i!=show.size()-1)
-						pathString.append("" + show.get(i).getKey() + "->");
-					else pathString.append("" + show.get(i).getKey());
-				}
-				g.showPath(show);
-				JOptionPane.showMessageDialog(TSPLIST,"Shortest path is:" + pathString.toString());
-				isRepaint=1;
-				break;
-
-			case "isConnected":
-				if(isRepaint==1){
-					g.printGraph();
-					isRepaint=0;
-				}
-				JFrame Connection = new JFrame();
-				boolean ans= g.isConnected();
-				if(ans) JOptionPane.showMessageDialog(Connection,"The Graph is Connected.");
-				else JOptionPane.showMessageDialog(Connection,"The Graph is not Connected.");
-				break;
-
-			case "ShortestPathDist":
-				if(isRepaint==1){
-					g.printGraph();
-					isRepaint=0;
-				}
-				JFrame SrcAndDist = new JFrame();
-				String Src= JOptionPane.showInputDialog(SrcAndDist,"Please enter Src key.");
-				String Dst = JOptionPane.showInputDialog(SrcAndDist,"Please enter Dest key");
-				int srcNode=24001;
-				int dstNode=240001;
-				try {
-					srcNode = Integer.parseInt(Src);
-					dstNode = Integer.parseInt(Dst);
-				}
-				catch (Exception badInput){
-					System.err.println("Please enter 2 good keys");
-					JOptionPane.showMessageDialog(SrcAndDist,"Error:Please enter 2 good keys ","Error",0);
-					break;
-				}
-				double shortestPath = g.ShortestPath(srcNode,dstNode);
-				if(shortestPath== Integer.MAX_VALUE){
-					JOptionPane.showMessageDialog(SrcAndDist,"There is no a path between the nodes.");
-					break;
-				}
-				ArrayList<node_data> way = (ArrayList)g.ShortestPathList(srcNode,dstNode);
-				g.showPath(way);
-				JOptionPane.showMessageDialog(SrcAndDist,"The Shortest path is :" + shortestPath);
-				isRepaint = 1;
-				break;
-
-			case "ShortestPathList":
-				if(isRepaint==1){
-					g.printGraph();
-					isRepaint=0;
-				}
-				JFrame ShortestList= new JFrame();
-				String SrcList = JOptionPane.showInputDialog(ShortestList,"Please enter Src key.");
-				String DstList = JOptionPane.showInputDialog(ShortestList,"Please enter Dst Key");
-				int srcKey = 2000;
-				int dstKey= 2000;
+				int senario=0;
+				String senarioString = JOptionPane.showInputDialog(getSenario,"Please choose a Game Senario");
 				try{
-					srcKey = Integer.parseInt(SrcList);
-					dstKey = Integer.parseInt(DstList);
-				}
-				catch (Exception e1 ){
-					System.err.println("Please enter 2 good keys");
-					JOptionPane.showMessageDialog(ShortestList,"Error:Please enter 2 good keys ","Error",0);
-					break;
-
-				}
-				StringBuilder stringList = new StringBuilder();
-				ArrayList<node_data> nodelist= (ArrayList)g.ShortestPathList(srcKey,dstKey);
-				if(nodelist == null){
-					JOptionPane.showMessageDialog(ShortestList,"There is no a path between the nodes.");
-					break;
-				}
-				for (int i = 0; i <nodelist.size() ; i++) {
-					if(i!=nodelist.size()-1)
-						stringList.append("" + nodelist.get(i).getKey() + "->");
-					else stringList.append("" + nodelist.get(i).getKey());
-				}
-				g.showPath(nodelist);
-				JOptionPane.showMessageDialog(ShortestList,stringList.toString(),"The shortest Path is:",1);
-				isRepaint=1;
-				break;
-
-			case "Add Node":
-				if(isRepaint==1){
-					g.printGraph();
-					isRepaint=0;
-				}
-				JFrame addPoint = new JFrame();
-				String xPoint = JOptionPane.showInputDialog(addPoint,"Please enter x Point ");
-				String yPoint = JOptionPane.showInputDialog(addPoint,"Please enter a y point");
-				int xpoint = 0;
-				int ypoint =0;
-				try{
-					xpoint=Integer.parseInt(xPoint);
-					ypoint=Integer.parseInt(yPoint);
-				}
-				catch (Exception badPoint){
-					System.err.println("Please enter good Point");
-					JOptionPane.showMessageDialog(addPoint,"Error Please enter 2 numbers","Error",0);
-					break;
-				}
-				g.add_node(xpoint,ypoint);
-				g.printGraph();
-				break;
-
-			case "Add Edge":
-				if(isRepaint==1){
-					g.printGraph();
-					isRepaint=0;
-				}
-				JFrame EdgePoint = new JFrame();
-				String xEdge = JOptionPane.showInputDialog(EdgePoint,"Please enter a src Node");
-				String yEdge = JOptionPane.showInputDialog(EdgePoint,"Please enter a dest Noode");
-				String EWeight = JOptionPane.showInputDialog(EdgePoint,"Please enter a weight");
-				int xedge=0;
-				int yedge=0;
-				int eweight=0;
-				try{
-					xedge=Integer.parseInt(xEdge);
-					yedge= Integer.parseInt(yEdge);
-					eweight= Integer.parseInt(EWeight);
-				}
-				catch(Exception edgeEx){
-					System.err.println("Please enter good parameters");
-					JOptionPane.showMessageDialog(EdgePoint,"Error:Please enter good parameters","Error",0);
-					break;
-				}
-				g.add_edge(xedge,yedge,eweight);
-				g.printGraph();
-				break;
-
-			case "Remove Edge":
-				if(isRepaint==1){
-					g.printGraph();
-					isRepaint=0;
-				}
-				JFrame removeEdge = new JFrame();
-				String srcnode = JOptionPane.showInputDialog(removeEdge,"Please enter a src Node");
-				String dstnode = JOptionPane.showInputDialog(removeEdge,"Please enter a dest Node");
-				int srctoremove=0;
-				int dsttoremove=0;
-				try{
-					srctoremove= Integer.parseInt(srcnode);
-					dsttoremove= Integer.parseInt(dstnode);
-				}
-				catch(Exception removEX){
-					System.err.println("Please enter good parameters");
-					JOptionPane.showMessageDialog(removeEdge,"Error:Please enter good parameters","Error",0);
-					break;
-				}
-				g.remove_edge(srctoremove,dsttoremove);
-				g.printGraph();
-				break;
-
-
-			case "Remove Node":
-				if(isRepaint==1){
-					g.printGraph();
-					isRepaint=0;
-				}
-				JFrame removeNode = new JFrame();
-				String nodetoremove= JOptionPane.showInputDialog(removeNode,"Please enter a key to remove");
-				int keytoremove= 0;
-				try{
-					keytoremove= Integer.parseInt(nodetoremove);
-				}
-				catch(Exception noderm){
-					System.err.println("Please enter good key");
-					JOptionPane.showMessageDialog(removeNode,"Error:Please enter good key","Error",0);
-					break;
-				}
-				g.remove_node(keytoremove);
-				g.printGraph();
+					senario=Integer.parseInt(senarioString);
+				}catch(Exception e1){e1.printStackTrace();}
+				StdDraw.clear();
+				this.mgg.startGame(senario);
 				break;
 
 		}

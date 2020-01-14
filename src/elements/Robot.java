@@ -4,6 +4,7 @@ import algorithms.Graph_Algo;
 import dataStructure.edge_data;
 import dataStructure.graph;
 import dataStructure.node_data;
+import gameClient.MyGameGUI;
 import gui.Graph_GUI;
 import org.json.JSONObject;
 import utils.Point3D;
@@ -68,9 +69,7 @@ public class Robot implements RobotInterface {
 
     }
 
-    public int nextNodeByClick(int node_id){
-        return 0;
-    }
+
 
     public void sortList(List<Fruit> arr){
         Comparator<Fruit> m = new FruitComperator();
@@ -78,11 +77,6 @@ public class Robot implements RobotInterface {
     }
 
     public int getNextNode1(graph g,List<Fruit> arr){
-
-
-
-
-
 
 
         return 0;
@@ -96,54 +90,70 @@ public class Robot implements RobotInterface {
         int whereTo=-1;
         int finalWhereTo =-1;
         for (Fruit fruit: arr) {
-            temp = fruit.getFruitEdge(g,fruit);
-            if(fruit.getType()==-1){
-                if(temp.getDest()>temp.getSrc()){
-                    disFromRob=p.shortestPathDist(this.src,temp.getDest());
-                    whereTo=temp.getSrc();
-                }
-                else if(temp.getSrc()>temp.getDest()){
-                    disFromRob=p.shortestPathDist(this.src,temp.getSrc());
-                    whereTo=temp.getDest();
-                }
-                if(disFromRob<min){
-                    min = disFromRob;
-                    finalWhereTo=whereTo;
+            if (fruit.getTag() == 0) {
+                temp = fruit.getFruitEdge(g, fruit);
+                System.out.println("edge after get :" + temp);
+                if (fruit.getType() == -1) {
+
+                    if (temp.getDest() > temp.getSrc()) {
+                        disFromRob = p.shortestPathDist(this.src, temp.getDest());
+                        whereTo = temp.getSrc();
+                    } else if (temp.getSrc() > temp.getDest()) {
+                        disFromRob = p.shortestPathDist(this.src, temp.getSrc());
+                        whereTo = temp.getDest();
+                    }
+                    if(this.src==temp.getSrc()) {
+                        return temp.getDest();
+                    }
+                    if(this.src==temp.getDest()) {
+                        return temp.getSrc();
+                    }
+                    if (disFromRob < min) {
+                        min = disFromRob;
+                        finalWhereTo = whereTo;
+                    }
+
+                } else if (fruit.getType() == 1) {
+                    if (temp.getDest() < temp.getSrc()) {
+                        disFromRob = p.shortestPathDist(this.src, temp.getDest());
+                        whereTo = temp.getDest();
+                    } else if (temp.getSrc() < temp.getDest()) {
+                        disFromRob = p.shortestPathDist(this.src, temp.getSrc());
+                        whereTo = temp.getSrc();
+                    }
+                    if(this.src==temp.getSrc()) {
+                        return temp.getDest();
+                    }
+                    if(this.src==temp.getDest()) {
+                        return temp.getSrc();
+                    }
+                    if (disFromRob < min) {
+                        min = disFromRob;
+                        finalWhereTo = whereTo;
+                    }
+
                 }
 
-            }
-            else if(fruit.getType()==1){
-                if(temp.getDest()<temp.getSrc()){
-                    disFromRob= p.shortestPathDist(this.src,temp.getDest());
-                    whereTo= temp.getDest();
-                }
-                else if(temp.getSrc()<temp.getDest()){
-                    disFromRob= p.shortestPathDist(this.src,temp.getSrc());
-                    whereTo= temp.getSrc();
-                }
-                if(disFromRob<min){
-                    min=disFromRob;
-                    finalWhereTo=whereTo;
-                }
+
 
             }
-
-            List<node_data> ans = p.shortestPath(this.src,finalWhereTo);
-            if(ans.size()==1){
-                List<node_data> ans2 = p.shortestPath(this.src,(finalWhereTo+15)%11);
-              return ans2.get(1).getKey();
-            }
-            System.out.println(ans + " we go to: " + finalWhereTo );
-            return ans.get(1).getKey();
 
         }
+        List<node_data> ans = p.shortestPath(this.src, finalWhereTo);
+        if (ans.size() == 1) {
+            List<node_data> ans2 = p.shortestPath(this.src, (finalWhereTo + 15) % 11);
 
-
-    return 0;
+            return ans2.get(1).getKey();
+        }
+        System.out.println(ans + " we go to: " + finalWhereTo + "robotid is: " + this.ID);
+        return ans.get(1).getKey();
     }
+
+
     public String getImg(){
         return this.img;
     }
+
     public Point3D getPos(){
         return this.pos;
     }

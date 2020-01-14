@@ -23,14 +23,10 @@ public class Graph_GUI extends Thread {
 
 
     public Graph_GUI (){
-        graph= new DGraph();
-        graph_algo= new Graph_Algo();
-        StdDraw.g=this;
-        this.openGraph();
-        ModeCount=graph.getMC();
-        this.start();
+        this.openWindow();
     }
     public Graph_GUI(DGraph graph){
+        StdDraw.clear();
         this.graph = graph;
         graph_algo.init(graph);
         StdDraw.g=this;
@@ -38,53 +34,7 @@ public class Graph_GUI extends Thread {
         ModeCount=graph.getMC();
         this.start();
     }
-    public  boolean isConnected(){
-        graph_algo.init(graph);
-        return graph_algo.isConnected();
-    }
 
-    public  void add_node (double x, double y) {//change key
-        checKeys(graph.getV());
-        Point3D p = new Point3D(x,y);
-        Node n = new Node(p);
-        graph.addNode(n);
-        StdDraw.g=this;
-        if(x>xRange.get_max() || x<xRange.get_min() || y>yRange.get_max() ||y<yRange.get_min())openCanvas();
-
-    }
-    public void checKeys(Collection<node_data> temp){
-        int key =Integer.MIN_VALUE;
-        for (node_data node: temp) {
-            if(node.getKey()>key){
-                key=node.getKey();
-            }
-        }
-        if(key==Integer.MIN_VALUE) key =0;
-        Node.keyNum=++key;
-    }
-
-    public void add_edge (int src,int dest,double weight) {
-        graph.connect(src,dest,weight);
-    }
-
-    public  void remove_edge (int src,int dest) {
-        graph.removeEdge(src, dest);
-    }
-
-    public void remove_node (int key) {     //change key
-
-        graph.removeNode(key);
-    }
-    public void save(String file_name){
-        graph_algo.init(graph);
-        graph_algo.save(file_name);
-    }
-
-    public void load(String file_name){
-        graph_algo.init(file_name);
-        graph=(DGraph)graph_algo.copy();
-
-    }
     public node_data findNode(double x, double y){
         Collection<node_data> temp = graph.getV();
         for (node_data node: temp) {
@@ -92,38 +42,8 @@ public class Graph_GUI extends Thread {
         }
         return null;
     }
-    public double ShortestPath(int src,int dest){
-        graph_algo.init(graph);
-        return graph_algo.shortestPathDist(src,dest);
-    }
-    public List<node_data> ShortestPathList(int src,int dest){
-        graph_algo.init(graph);
-        return graph_algo.shortestPath(src,dest);
-    }
 
-    public void Clean(){
-        graph= new DGraph();
-        graph_algo.init(graph);
-        this.printGraph();
-    }
 
-    public void run(){
-        while(true) {
-            if (ModeCount != graph.getMC()) {
-                openCanvas();
-                ModeCount = graph.getMC();
-            }
-        }
-    }
-
-//    public void printR(ArrayList<Robot> p){
-//        for (Robot robot: p) {
-//            StdDraw.picture(robot.pos.x(),robot.pos.y(),robot.img,0.001,0.001);
-//        }
-//    }
-//    public void print(ArrayList<Fruit> p){
-//
-//    }
     public Range findRangeX(){
         if(graph.nodeSize()!=0) {
             double min = Integer.MAX_VALUE;
@@ -169,7 +89,7 @@ public class Graph_GUI extends Thread {
      *
      */
     public void openCanvas(){
-        StdDraw.setCanvasSize(1024,512);
+       StdDraw.setCanvasSize(1024,512);
         Range x = findRangeX();
         Range y = findRangeY();
         System.out.println(x.get_min() + "," + x.get_max());
@@ -179,23 +99,19 @@ public class Graph_GUI extends Thread {
         StdDraw.enableDoubleBuffering();
         printGraph();
 
-
     }
-    public void openGraph(){
+    public void openWindow(){
         StdDraw.setCanvasSize(1024,512);
         StdDraw.clear(Color.BLUE);
         StdDraw.setYscale(-51,50);
         StdDraw.setXscale(-51,50);
         StdDraw.picture(0,0,"Maze.png");
-
-
     }
-
     /**
      * this function prints the graph
      *
      */
-    public  void printGraph(){
+    public void printGraph(){
         StdDraw.clear();
         double rightScaleX = ((xRange.get_max()-xRange.get_min())*0.04);
         double rightScaleY =  ((yRange.get_max()-yRange.get_min())*0.04);
@@ -222,7 +138,7 @@ public class Graph_GUI extends Thread {
                         if(temp2!=null){
                             StdDraw.setPenRadius(0.003);
                             StdDraw.setPenColor(Color.RED);
-                            double weight = temp2.getWeight();
+                            double weight = Math.round(temp2.getWeight()*100.0)/100.0;
                             node_data srcNode = d.getNode(temp2.getSrc());
                             node_data dstNode = d.getNode(temp2.getDest());
                             Point3D srcP = srcNode.getLocation();
@@ -232,7 +148,7 @@ public class Graph_GUI extends Thread {
                             double x = 0.2*srcP.x()+0.8*dstP.x();
                             double y = 0.2*srcP.y() + 0.8*dstP.y();
                             StdDraw.setPenColor(Color.BLACK);
-                            StdDraw.text(x,y, "" +Math.round(weight%2));
+                            StdDraw.text(x,y, "" +weight);
 
                             StdDraw.setPenColor(Color.YELLOW);
                             StdDraw.setPenRadius(0.15);
@@ -244,30 +160,12 @@ public class Graph_GUI extends Thread {
                     }
                 }
             }
-
         }
 
-       // StdDraw.show();
     }
 
     public List<node_data> TSP(List<Integer> targets){
         graph_algo.init(graph);
         return graph_algo.TSP(targets);
     }
-    public void showPath(ArrayList<node_data> ans){
-        StdDraw.setPenRadius(0.15);
-        for (int i = 0; i <ans.size() ; i++) {
-            StdDraw.setPenColor(Color.GREEN);
-            StdDraw.filledCircle(graph.getNode(ans.get(i).getKey()). getLocation().x(),graph.getNode(ans.get(i).getKey()).getLocation().y(),0.8);
-        }
-        for (int i = 0; i <ans.size()-1 ; i++) {
-            StdDraw.setPenRadius(0.003);
-            StdDraw.setPenColor(Color.GREEN);
-            Point3D src =graph.getNode(ans.get(i).getKey()).getLocation();
-            Point3D dst = graph.getNode(ans.get(i+1).getKey()).getLocation();
-            StdDraw.line(src.x(),src.y(),dst.x(),dst.y());
-        }
-
-    }
-
 }

@@ -19,7 +19,8 @@ public class Fruit implements FruitInterface {
     private String img;
     private double value;
     private int type;
-    private static double EPSILON = 0.0001;
+    private int tag;
+    private static double EPSILON = 0.0000001;
 
     public Fruit(){
         this.value=0;
@@ -27,6 +28,7 @@ public class Fruit implements FruitInterface {
         this.pos=null;
         this.value=0;
         this.type=0;
+        this.tag=0;
     }
     public Fruit(Fruit c){
         this.type=c.type;
@@ -88,11 +90,8 @@ public class Fruit implements FruitInterface {
             if(edges!=null){
                 for (edge_data edge:edges) {
                     if(isOnEdge(g,edge,fruit)){
+                        System.out.println("edge is:" + edge);
                         return edge;
-//                        int first = edge.getDest();
-//                        int second = edge.getSrc();
-//                        if(fruit.type== -1) return Math.max(first,second);
-//                        else return Math.min(first,second);
                     }
                 }
             }
@@ -130,6 +129,12 @@ public class Fruit implements FruitInterface {
 
         }
         return ans;
+    }
+    public void setTag(int t){
+        this.tag=t;
+    }
+    public int getTag(){
+        return this.tag;
     }
 
 }

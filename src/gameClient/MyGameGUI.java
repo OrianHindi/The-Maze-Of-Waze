@@ -27,10 +27,13 @@ public class MyGameGUI implements Runnable {
 
 
     public MyGameGUI() {
-    //    StdDraw.mgg = this;
+         StdDraw.mgg = this;
+        Graph_GUI p= new Graph_GUI();
+
     }
 
     public void startGame(int senario){
+
         game_service game = Game_Server.getServer(senario); // you have [0,23] games
         this.game1=game;
         String g = game.getGraph();
@@ -78,8 +81,13 @@ public class MyGameGUI implements Runnable {
             toaddRobot.printRobots(this.players);
             toAddFruit.printFruit(this.foodss);
             StdDraw.show();
+
         }
-        System.out.println("game is over" + this.players.get(0).getValue());
+        double checksum =0;
+        for (Robot rob: this.players) {
+            checksum+=rob.getValue();
+        }
+        System.out.println("game is over" + game.toString());
     }
 
     public void moveRobots(game_service game,DGraph g){
@@ -126,8 +134,7 @@ public class MyGameGUI implements Runnable {
 
     public static void main(String[] args) {
         MyGameGUI p = new MyGameGUI();
-        p.startGame(2);
-
+      //   p.startGame(5);
     }
 
 
