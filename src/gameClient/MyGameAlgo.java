@@ -2,15 +2,22 @@ package gameClient;
 
 import Server.Game_Server;
 import Server.game_service;
+import algorithms.Graph_Algo;
 import dataStructure.DGraph;
+import dataStructure.edge_data;
+import dataStructure.graph;
+import dataStructure.node_data;
 import elements.Fruit;
+import elements.Robot;
 import org.json.JSONObject;
+import utils.StdDraw;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyGameAlgo {
+public class MyGameAlgo extends  Thread{
     private MyGameGUI MyGG;
+
 
 
     public void startGame(int senario)  {
@@ -27,22 +34,140 @@ public class MyGameAlgo {
         this.MyGG.setFoodss(this.MyGG.getToAddFruit().fillFruitList(fruits)); ;  //init the Fruits the our ArrayList fruit.
 
 
-        ArrayList<Fruit> copied = toAddFruit.copy(this.foodss);
-        int numRobs=0;
-        try {   //get the number of robots from server.
-            JSONObject game_info = new JSONObject(info);
-            JSONObject robots = game_info.getJSONObject("GameServer");
-            numRobs = robots.getInt("robots");
-        }catch(Exception e){e.printStackTrace();}
-
+        ArrayList<Fruit> copied = this.MyGG.getToAddFruit().copy(this.MyGG.getFoodss());
+        int numRobs=MyGG.numOfRobs(info);
         placeRobots(numRobs,copied);
 
         List<String> robList = game.getRobots();
-        this.players=toaddRobot.fillRobotList(robList);
-        this.game1.startGame();
+        this.MyGG.setPlayers(this.MyGG.getToaddRobot().fillRobotList(robList));
+        this.MyGG.getGame1().startGame();
         this.start();
 
 
     }
 
+    public void run() {
+        while(this.MyGG.getGame1().isRunning()){
+            this.MyGG.updateFruits();
+            this.MyGG.updateRobots();
+            moveRobots(this.MyGG.getGame1(),this.MyGG.getGgraph());
+            this.MyGG.printGraph();
+            this.MyGG.printRobots(this.MyGG.getPlayers());
+            this.MyGG.printFruit(this.MyGG.getFoodss());
+            StdDraw.show();
+            try{
+                sleep(10);
+            }catch (Exception e){e.printStackTrace();}
+
+        }
+        System.out.println("game is over" + this.MyGG.getGame1().toString());
+
+    }
+    public void placeRobots(int numRobs, ArrayList<Fruit> copied) {
+        for (int i = 0; i <numRobs; i++) {
+            edge_data p = this.MyGG.getToAddFruit().getFruitEdge(this.MyGG.getGgraph(),copied.get(0));
+            if(copied.get(0).getType()==-1){
+                this.MyGG.getGame1().addRobot(Math.max(p.getDest(),p.getSrc()));
+            }
+            else if(copied.get(0).getType()==1){
+                this.MyGG.getGame1().addRobot(Math.min(p.getDest(),p.getSrc()));
+            }
+            copied.remove(0);
+        }
+    }
+    public void moveRobots(game_service game,DGraph g){
+        List<String> log = game.move();
+        if(log!=null){
+            long t = game.timeToEnd();
+            for (int i = 0; i <log.size() ; i++) {
+                String robot_json = log.get(i);
+                try{
+                    JSONObject line = new JSONObject(robot_json);
+                    JSONObject tomove = line.getJSONObject("Robot");
+                    int robID = tomove.getInt("id");
+                    int src = tomove.getInt("src");
+                    int dest = tomove.getInt("dest");
+
+
+                    if(dest == -1){
+                        dest=getNextNode(this.MyGG.getPlayers().get(i),g,this.MyGG.getFoodss());
+                        game.chooseNextEdge(robID,dest);
+                    }
+
+                }catch(Exception e){e.printStackTrace();}
+
+            }
+        }
+    }
+    public void setMyGG(MyGameGUI p){this.MyGG=p;}
+
+
+    /**
+     * this function return where should the robot move next.
+     * if automatic by algorithms or by client wish.
+     * @return the node key the we should move to.
+     */
+    public int getNextNode(Robot r , graph g, List<Fruit> arr ) {
+        Graph_Algo p = new Graph_Algo(g);
+        edge_data temp = null;
+        double min = Integer.MAX_VALUE;
+        double disFromRob = 0;
+        int whereTo=-1;
+        int finalWhereTo =-1;
+        for (Fruit fruit: arr) {
+            if (fruit.getTag() == 0) {
+                temp = fruit.getFruitEdge(g, fruit);
+                if (fruit.getType() == -1) {
+                    if (temp.getDest() > temp.getSrc()) {
+                        disFromRob = p.shortestPathDist(r.getSrc(), temp.getDest());
+                        whereTo = temp.getSrc();
+                    } else if (temp.getSrc() > temp.getDest()) {
+                        disFromRob = p.shortestPathDist(r.getSrc(), temp.getSrc());
+                        whereTo = temp.getDest();
+                    }
+                    if(r.getSrc()==temp.getSrc()) {
+                        return temp.getDest();
+                    }
+                    if(r.getSrc()==temp.getDest()) {
+                        return temp.getSrc();
+                    }
+                    if (disFromRob < min) {
+                        min = disFromRob;
+                        finalWhereTo = whereTo;
+                    }
+
+                } else if (fruit.getType() == 1) {
+                    if (temp.getDest() < temp.getSrc()) {
+                        disFromRob = p.shortestPathDist(r.getSrc(), temp.getDest());
+                        whereTo = temp.getDest();
+                    } else if (temp.getSrc() < temp.getDest()) {
+                        disFromRob = p.shortestPathDist(r.getSrc(), temp.getSrc());
+                        whereTo = temp.getSrc();
+                    }
+                    if(r.getSrc()==temp.getSrc()) {
+                        return temp.getDest();
+                    }
+                    if(r.getSrc()==temp.getDest()) {
+                        return temp.getSrc();
+                    }
+                    if (disFromRob < min) {
+                        min = disFromRob;
+                        finalWhereTo = whereTo;
+                    }
+
+                }
+
+
+
+            }
+
+        }
+        List<node_data> ans = p.shortestPath(r.getSrc(), finalWhereTo);
+        if (ans.size() == 1) {
+            List<node_data> ans2 = p.shortestPath(r.getSrc(), (finalWhereTo + 15) % 11);
+
+            return ans2.get(1).getKey();
+        }
+        return ans.get(1).getKey();
+    }
 }

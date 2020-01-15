@@ -29,61 +29,80 @@ public class MyGameGUI extends Thread {
     private game_service game1;
     private static Range xRange= new Range(0,0);
     private static Range yRange= new Range(0,0);
+    private static MyGameAlgo algoGame= new MyGameAlgo();
+    private static int  robturn=0;
 
 
 
     public MyGameGUI() {
         StdDraw.mgg=this;
+        algoGame.setMyGG(this);
         openWindow();
     }
 
     public MyGameGUI (int x){
         StdDraw.mgg=this;
+        algoGame= new MyGameAlgo();
+        algoGame.setMyGG(this);
 
     }
 
+    public void startGame_Manual(int senario) {
+        //we init the game & graph
+        game_service game = Game_Server.getServer(senario); // you have [0,23] games
+        this.game1 = game;
+        String g = game.getGraph();
+        DGraph d = new DGraph();
+        d.init(g);
+        this.Ggraph = d; // set our Graph to the graph that have been built from JSON that represent the graph of scenario.
+        this.findRange();  // get the Scale of the graph;
+        String info = game.toString();
+        //      System.out.println(info);
 
-    private void placeRobots(int numRobs, ArrayList<Fruit> copied) {
-        for (int i = 0; i <numRobs; i++) {
-            edge_data p = toAddFruit.getFruitEdge(this.Ggraph,copied.get(0));
-            if(copied.get(0).getType()==-1){
-                this.game1.addRobot(Math.max(p.getDest(),p.getSrc()));
-            }
-            else if(copied.get(0).getType()==1){
-                this.game1.addRobot(Math.min(p.getDest(),p.getSrc()));
-            }
-            copied.remove(0);
+        // we init the fruits
+        List<String> fruits = this.game1.getFruits();
+        this.foodss = toAddFruit.fillFruitList(fruits);  //init the Fruits the our ArrayList fruit.
+
+        int numRobs = numOfRobs(info);
+        printGraph();
+        printFruit(this.foodss);
+        StdDraw.show();
+
+        String list = JOptionPane.showInputDialog(null,"Please enter " + numRobs + "node keys for Robots.","Shape of x,y,z,w",1);
+        int[] keysArr = new int[numRobs];
+        System.out.println("num of robs:" + numRobs);
+        System.out.println(list);
+        String[] arr=new String[numRobs];
+        if(numRobs==1){
+            keysArr[0]=Integer.parseInt(list);
         }
-    }
-
-    public void moveRobots(game_service game,DGraph g){
-        List<String> log = game.move();
-        if(log!=null){
-            long t = game.timeToEnd();
-            for (int i = 0; i <log.size() ; i++) {
-                String robot_json = log.get(i);
-                try{
-                    JSONObject line = new JSONObject(robot_json);
-                    JSONObject tomove = line.getJSONObject("Robot");
-                    int robID = tomove.getInt("id");
-                    int src = tomove.getInt("src");
-                    int dest = tomove.getInt("dest");
-
-
-                    if(dest == -1){
-                        dest=this.players.get(i).getNextNode(g,this.foodss);
-                        game.chooseNextEdge(robID,dest);
-                    }
-
-                }catch(Exception e){e.printStackTrace();}
-
+        else {
+            arr = list.split(",");
+            for (int i = 0; i < numRobs; i++) {
+                keysArr[i] = Integer.parseInt(arr[i]);
             }
         }
+        // we placed robots
+        placeRobots_Manual(keysArr);
+
+        // init the robots
+        List<String> robListManual = game.getRobots();
+        this.players = toaddRobot.fillRobotList(robListManual);
+
+        //add robot to the gui screen.
+        printRobots(this.players);
+        StdDraw.show();
+
+        JOptionPane.showMessageDialog(null,"Game is about to start");
+
+        this.game1.startGame();
+        this.start();
     }
 
     public void updateRobots(){
         List<String> robots = this.game1.getRobots();
         if(robots!=null){
+            System.out.println(this.players.size());
             for (int i = 0; i <this.players.size() ; i++) {
                 this.players.get(i).update(robots.get(i));
             }
@@ -105,6 +124,8 @@ public class MyGameGUI extends Thread {
         StdDraw.picture(0,0,"Maze.png");
         StdDraw.show();
     }
+
+
     private void placeRobots_Manual(int[] arr) {
         for (int i = 0; i <arr.length ; i++) {
             this.game1.addRobot(arr[i]);
@@ -114,25 +135,6 @@ public class MyGameGUI extends Thread {
 
 
 
-
-    @Override
-    public void run() {
-        while(this.game1.isRunning()){
-            updateFruits();
-            updateRobots();
-            moveRobots(this.game1,this.Ggraph);
-            this.printGraph();
-            printRobots(this.players);
-            printFruit(this.foodss);
-            StdDraw.show();
-            try{
-                sleep(10);
-            }catch (Exception e){e.printStackTrace();}
-
-        }
-        System.out.println("game is over" + this.game1.toString());
-
-    }
     public Range findRangeX(){
         if(this.Ggraph.nodeSize()!=0) {
             double min = Integer.MAX_VALUE;
@@ -198,21 +200,72 @@ public class MyGameGUI extends Thread {
         if(selctedGame=="Auto Game") {
             StdDraw.clear();
             StdDraw.enableDoubleBuffering();
-            startGame(senario);
+            algoGame.startGame(senario);
         }
         else{
-            String list = JOptionPane.showInputDialog(null,"Please enter Nodes for robots.","Shape of x,y,z,w",1);
-            String[] arr = list.split(",");
-            int[] keys= new int[arr.length];
             StdDraw.clear();
             StdDraw.enableDoubleBuffering();
+            startGame_Manual(senario);
 
 
         }
 
-
-
     }
+//    public void moveRobots_Manual(game_service game, DGraph g) {
+//        List<String> log = game.move();
+//        double x, y = 0;
+//        if (log != null) {
+//            long t = game.timeToEnd();      // we need to check if well run on time or log.size
+//            for (int i = 0; i < log.size(); i++) {
+//                String robot_json = log.get(i);
+//                try {
+//                    JSONObject line = new JSONObject(robot_json);
+//                    JSONObject tomove = line.getJSONObject("Robot");
+//                    int robID = tomove.getInt("id");
+//                    int src = tomove.getInt("src");
+//                    int dest = tomove.getInt("dest");
+//
+//                    if (StdDraw.isMousePressed()) {
+//                        robturn++;
+//                        x = StdDraw.mouseX();
+//                        y = StdDraw.mouseY();
+//                        Node n = (Node) findNode(x, y);
+//                        edge_data p = this.Ggraph.getEdge(src, n.getKey());   // edge neighbors of the robot
+//
+//                        if (n == null || p == null) {
+//                            System.out.println("Please try again");
+//                        } else {
+//                            if (dest == -1) {
+//                                game.chooseNextEdge(robturn % players.size(), n.getKey()); // players(J).CHOOSE
+//                                System.out.println(i);
+//                            }
+//                        }
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+//    }
+//      @Override
+//    public void run() {
+//        while (this.game1.isRunning()) {
+//            updateFruits();
+//            updateRobots();
+//
+//            moveRobots_Manual(this.game1, this.Ggraph);
+//            this.printGraph();
+//            printRobots(this.players);
+//            printFruit(this.foodss);
+//            StdDraw.show();
+//            try {
+//                sleep(10);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        System.out.println("game is over" + this.game1.toString());
+//    }
 
     /**
      * this function prints the graph
@@ -296,6 +349,17 @@ public class MyGameGUI extends Thread {
         }
 
     }
+    protected int numOfRobs(String s){
+        int numRobs=0;
+        try {   //get the number of robots from server.
+            JSONObject game_info = new JSONObject(s);
+            JSONObject robots = game_info.getJSONObject("GameServer");
+            numRobs = robots.getInt("robots");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return numRobs;
+    }
 
     /**
      * Setter && Getters
@@ -310,6 +374,7 @@ public class MyGameGUI extends Thread {
     public Robot getToaddRobot(){return this.toaddRobot;}
     public Fruit getToAddFruit(){return this.toAddFruit;}
     public DGraph getGgraph(){return this.Ggraph;}
+    public MyGameAlgo getAlgoGame(){return algoGame;}
 
 }
 

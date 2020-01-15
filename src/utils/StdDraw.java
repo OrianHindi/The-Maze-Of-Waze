@@ -1,6 +1,7 @@
 package utils;
 import dataStructure.Edge;
 import dataStructure.node_data;
+import gameClient.MyGameAlgo;
 import gameClient.MyGameGUI;
 import gui.Graph_GUI;
 
@@ -638,7 +639,7 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	 * @throws IllegalArgumentException unless both {@code canvasWidth} and
 	 *         {@code canvasHeight} are positive
 	 */
-	public static Graph_GUI g;
+	public static MyGameAlgo g;
 	public static MyGameGUI mgg;
 	public static int isRepaint =0;
 
@@ -1674,6 +1675,8 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 				mgg.getGame1().stopGame();
 				mgg.finishGame();
 				mgg = new MyGameGUI(1);
+//				g= new MyGameAlgo();
+//				g.setMyGG(mgg);
 				int senario=0;
 				String senarioString = JOptionPane.showInputDialog(null,"Please choose a Game Senario");
 				try{
@@ -1685,7 +1688,7 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 
 				}
 				else {
-					mgg.startGame(senario);
+					mgg.getAlgoGame().startGame(senario);
 				}
 				break;
 

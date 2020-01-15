@@ -20,11 +20,6 @@ public interface RobotInterface {
      * @return the arraylist that have benn built.
      */
     public ArrayList<Robot> fillRobotList(List<String> arr);
-    /**
-     * this function return where should the robot move next.
-     * if automatic by algorithms or by client wish.
-     * @return the node key the we should move to.
-     */
-    public int getNextNode(graph g, List<Fruit> arr);
+
 
 }

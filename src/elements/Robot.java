@@ -57,19 +57,9 @@ public class Robot implements RobotInterface {
             temp.dest=robott.getInt("dest");
             String pos = robott.getString("pos");
             temp.pos= new Point3D(pos);
-            temp.img="Robot" + 0 +".png";
+            temp.img="Robot" + i +".png";
         }catch (Exception e){e.printStackTrace();}
         return temp;
-    }
-
-
-
-
-
-
-    public void sortList(List<Fruit> arr){
-        Comparator<Fruit> m = new FruitComperator();
-        arr.sort(m);
     }
 
     public ArrayList<Robot> fillRobotList(List<String> arr){
@@ -81,69 +71,6 @@ public class Robot implements RobotInterface {
         return temp;
     }
 
-    public int getNextNode(graph g, List<Fruit> arr ) {
-        Graph_Algo p = new Graph_Algo(g);
-        edge_data temp = null;
-        double min = Integer.MAX_VALUE;
-        double disFromRob = 0;
-        int whereTo=-1;
-        int finalWhereTo =-1;
-        for (Fruit fruit: arr) {
-            if (fruit.getTag() == 0) {
-                temp = fruit.getFruitEdge(g, fruit);
-                if (fruit.getType() == -1) {
-                    if (temp.getDest() > temp.getSrc()) {
-                        disFromRob = p.shortestPathDist(this.src, temp.getDest());
-                        whereTo = temp.getSrc();
-                    } else if (temp.getSrc() > temp.getDest()) {
-                        disFromRob = p.shortestPathDist(this.src, temp.getSrc());
-                        whereTo = temp.getDest();
-                    }
-                    if(this.src==temp.getSrc()) {
-                        return temp.getDest();
-                    }
-                    if(this.src==temp.getDest()) {
-                        return temp.getSrc();
-                    }
-                    if (disFromRob < min) {
-                        min = disFromRob;
-                        finalWhereTo = whereTo;
-                    }
-
-                } else if (fruit.getType() == 1) {
-                    if (temp.getDest() < temp.getSrc()) {
-                        disFromRob = p.shortestPathDist(this.src, temp.getDest());
-                        whereTo = temp.getDest();
-                    } else if (temp.getSrc() < temp.getDest()) {
-                        disFromRob = p.shortestPathDist(this.src, temp.getSrc());
-                        whereTo = temp.getSrc();
-                    }
-                    if(this.src==temp.getSrc()) {
-                        return temp.getDest();
-                    }
-                    if(this.src==temp.getDest()) {
-                        return temp.getSrc();
-                    }
-                    if (disFromRob < min) {
-                        min = disFromRob;
-                        finalWhereTo = whereTo;
-                    }
-
-                }
-
-
-
-            }
-
-        }
-        List<node_data> ans = p.shortestPath(this.src, finalWhereTo);
-        if (ans.size() == 1) {
-            List<node_data> ans2 = p.shortestPath(this.src, (finalWhereTo + 15) % 11);
-
-            return ans2.get(1).getKey();
-        }
-        return ans.get(1).getKey();
-    }
 
 
     public String getImg(){

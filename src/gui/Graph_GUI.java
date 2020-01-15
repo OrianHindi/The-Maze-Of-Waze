@@ -29,7 +29,6 @@ public class Graph_GUI extends Thread {
         StdDraw.clear();
         this.graph = graph;
         graph_algo.init(graph);
-        StdDraw.g=this;
         this.openCanvas();
         ModeCount=graph.getMC();
         this.start();
