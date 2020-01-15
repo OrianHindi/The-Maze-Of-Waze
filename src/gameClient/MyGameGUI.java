@@ -3,6 +3,7 @@ package gameClient;
 import Server.Game_Server;
 import Server.game_service;
 import dataStructure.DGraph;
+import dataStructure.Node;
 import dataStructure.edge_data;
 import dataStructure.node_data;
 import elements.Fruit;
@@ -35,42 +36,12 @@ public class MyGameGUI extends Thread {
         StdDraw.mgg=this;
         openWindow();
     }
+
     public MyGameGUI (int x){
         StdDraw.mgg=this;
 
     }
 
-    public void startGame(int senario)  {
-        game_service game = Game_Server.getServer(senario); // you have [0,23] games
-        this.game1=game;
-        String g = game.getGraph();
-        DGraph d = new DGraph();
-        d.init(g);
-        this.Ggraph=d; // set our Graph to the graph that have been built from JSON that represent the graph of scenario.
-        this.findRange();  // get the Scale of the graph;
-        String info = game.toString();
-        System.out.println(info);
-        List<String> fruits = this.game1.getFruits();
-        this.foodss= toAddFruit.fillFruitList(fruits);  //init the Fruits the our ArrayList fruit.
-
-
-        ArrayList<Fruit> copied = toAddFruit.copy(this.foodss);
-        int numRobs=0;
-        try {   //get the number of robots from server.
-            JSONObject game_info = new JSONObject(info);
-            JSONObject robots = game_info.getJSONObject("GameServer");
-            numRobs = robots.getInt("robots");
-        }catch(Exception e){e.printStackTrace();}
-
-        placeRobots(numRobs,copied);
-
-        List<String> robList = game.getRobots();
-        this.players=toaddRobot.fillRobotList(robList);
-        this.game1.startGame();
-        this.start();
-
-
-    }
 
     private void placeRobots(int numRobs, ArrayList<Fruit> copied) {
         for (int i = 0; i <numRobs; i++) {
@@ -134,6 +105,12 @@ public class MyGameGUI extends Thread {
         StdDraw.picture(0,0,"Maze.png");
         StdDraw.show();
     }
+    private void placeRobots_Manual(int[] arr) {
+        for (int i = 0; i <arr.length ; i++) {
+            this.game1.addRobot(arr[i]);
+        }
+    }
+
 
 
 
@@ -145,8 +122,8 @@ public class MyGameGUI extends Thread {
             updateRobots();
             moveRobots(this.game1,this.Ggraph);
             this.printGraph();
-            toaddRobot.printRobots(this.players);
-            toAddFruit.printFruit(this.foodss);
+            printRobots(this.players);
+            printFruit(this.foodss);
             StdDraw.show();
             try{
                 sleep(10);
@@ -224,6 +201,12 @@ public class MyGameGUI extends Thread {
             startGame(senario);
         }
         else{
+            String list = JOptionPane.showInputDialog(null,"Please enter Nodes for robots.","Shape of x,y,z,w",1);
+            String[] arr = list.split(",");
+            int[] keys= new int[arr.length];
+            StdDraw.clear();
+            StdDraw.enableDoubleBuffering();
+
 
         }
 
@@ -289,14 +272,44 @@ public class MyGameGUI extends Thread {
     }
 
     public static void main(String[] args) {
-        int x = 3;
         MyGameGUI p = new MyGameGUI();
-   //    p.startGame(11);
-    }
-    public game_service getGame1(){
-        return this.game1;
     }
 
+    /**
+     * this function print the fruits.
+     * @param fruitArr the list of the fruits.
+     */
+    public void printFruit(List<Fruit> fruitArr) {
+        for (Fruit fruit: fruitArr) {
+            StdDraw.picture(fruit.getPos().x(),fruit.getPos().y(),fruit.getImg(),0.0009,0.0009);
+        }
+
+    }
+
+    /**
+     * this function print the robots.
+     * @param RobotArr the list of the robots.
+     */
+    public void printRobots(List<Robot> RobotArr) {
+        for (Robot robot: RobotArr) {
+            StdDraw.picture(robot.getPos().x(),robot.getPos().y(),robot.getImg(),0.001,0.001);
+        }
+
+    }
+
+    /**
+     * Setter && Getters
+     */
+    public game_service getGame1(){return this.game1; }
+    public void setGame1(game_service game){this.game1=game;}
+    public void setGgraph(DGraph d){this.Ggraph=d;}
+    public void setPlayers(ArrayList<Robot> arr){this.players=arr;}
+    public void setFoodss(ArrayList<Fruit> arr){this.foodss=arr;}
+    public ArrayList<Fruit> getFoodss(){return this.foodss;}
+    public ArrayList<Robot> getPlayers(){return this.players;}
+    public Robot getToaddRobot(){return this.toaddRobot;}
+    public Fruit getToAddFruit(){return this.toAddFruit;}
+    public DGraph getGgraph(){return this.Ggraph;}
 
 }
 

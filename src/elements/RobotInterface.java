@@ -3,6 +3,7 @@ package elements;
 import dataStructure.graph;
 import utils.Point3D;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface RobotInterface {
@@ -14,10 +15,11 @@ public interface RobotInterface {
     public Robot initFromJson(String str,int i);
 
     /**
-     * this function print robots.
+     * this functuin build ArrayList with robots
+     * @param arr the list of strings that represent the robots.'
+     * @return the arraylist that have benn built.
      */
-    public void printRobots(List<Robot> RobotArr);
-
+    public ArrayList<Robot> fillRobotList(List<String> arr);
     /**
      * this function return where should the robot move next.
      * if automatic by algorithms or by client wish.

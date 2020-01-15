@@ -40,17 +40,6 @@ public class MyGameGUI_Manual extends Thread {
     Graph_GUI Ggui = new Graph_GUI();
 
 
-//    public MyGameGUI_Manual() {
-//        StdDraw.mgg=this;
-//        openWindow();
-//    }
-
-
-    //    public void updateGraph(String JSon String){
-//
-//    }
-
-
     public void moveRobots_Manual(game_service game, DGraph g) {
         List<String> log = game.move();
         double x, y = 0;
@@ -125,15 +114,14 @@ public class MyGameGUI_Manual extends Thread {
         this.start();
     }
 
+
+    //
     private void placeRobots_Manual(int numRobs) {
         for (int i = 0; i < numRobs; i++) {
             if (StdDraw.isMousePressed()) {
                 double x = StdDraw.mouseX();
                 double y = StdDraw.mouseY();
                 Node n = (Node) Ggui.findNode(x, y);
-//               while(n==null){
-//
-//               }
                 this.game1.addRobot(n.getKey());
             }
         }

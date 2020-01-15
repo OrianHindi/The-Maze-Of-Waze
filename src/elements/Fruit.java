@@ -74,12 +74,6 @@ public class Fruit implements FruitInterface {
         return temp;
     }
     @Override
-    public void printFruit(List<Fruit> fruitArr) {
-        for (Fruit fruit: fruitArr) {
-            StdDraw.picture(fruit.pos.x(),fruit.pos.y(),fruit.img,0.0009,0.0009);
-        }
-
-    }
 
     /**
      * this function return which node the robot should move, to the closest fruit.
@@ -119,12 +113,6 @@ public class Fruit implements FruitInterface {
         if (first + second > third -EPSILON && first+second<third+EPSILON) return true;
         return false;
     }
-    public int getType(){
-        return this.type;
-    }
-    public double getValue(){
-        return  this.value;
-    }
 
     public ArrayList<Fruit> copy(List<Fruit> copy){
         ArrayList<Fruit> ans = new ArrayList<>(copy.size());
@@ -134,11 +122,25 @@ public class Fruit implements FruitInterface {
         }
         return ans;
     }
+
+    /**
+     * Setters && Getters.
+     */
     public void setTag(int t){
         this.tag=t;
     }
     public int getTag(){
         return this.tag;
     }
+    public Point3D getPos(){return this.pos;}
+    public String getImg(){return this.img;}
+    public int getType(){
+        return this.type;
+    }
+    public double getValue(){
+        return  this.value;
+    }
+
+
 
 }

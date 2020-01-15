@@ -62,13 +62,8 @@ public class Robot implements RobotInterface {
         return temp;
     }
 
-    @Override
-    public void printRobots(List<Robot> RobotArr) {
-        for (Robot robot: RobotArr) {
-            StdDraw.picture(robot.pos.x(),robot.pos.y(),robot.img,0.001,0.001);
-        }
 
-    }
+
 
 
 

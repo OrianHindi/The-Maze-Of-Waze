@@ -5,6 +5,7 @@ import dataStructure.graph;
 import dataStructure.node_data;
 import utils.Point3D;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface FruitInterface {
@@ -17,9 +18,11 @@ public interface FruitInterface {
     public Fruit initFromJson(String JsonString);
 
     /**
-     * this function print all the fruits on the graph.
+     * this function build arraylist of fruits from strings
+     * @param arr the list of strings that represent the fruits.
+     * @return the arraylist that have benn built.
      */
-    public void printFruit(List<Fruit> arr);
+    public ArrayList<Fruit> fillFruitList(List<String> arr);
 
     /**
      * this function return where we should go with the robot to eat the fruits.
