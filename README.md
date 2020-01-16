@@ -10,14 +10,20 @@ play with your aliens and collect stars as much as possible!
 
 # Welcome:
 
- **THE WELCOME IMAGE**
+![Welcome](http://www.up2me.co.il/imgs/67178178.png)
+
  
 # Introduction:
 
 # Description:
 
+Example for Scenario 1:
 
+![Scenario11](http://www.up2me.co.il/imgs/48804872.png)
 
+Example for Scenario 11:
+
+![Scenario11](http://www.up2me.co.il/imgs/48804872.png)
 
 
 
@@ -73,3 +79,5 @@ in addition, Fruit class have a constructors, update function, isOnEdge function
 **More details about classes and interfaces of the project can be found on Wiki**
 
 We hope you enjoy !
+
+![GameOver](http://www.up2me.co.il/imgs/70056305.png)
