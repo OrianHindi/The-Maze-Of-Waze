@@ -10,29 +10,29 @@ play with your aliens and collect stars as much as possible!
 
 # Welcome:
 
-*** **THE WALCOME IMAGE** ***
+ **THE WALCOME IMAGE**
 
 
 # GameClient:
 
-# MyGameGUI:
+**MyGameGUI:**
 
-# MyGameAlgo:
+**MyGameAlgo:**
 
-# KML_Logger:
+**KML_Logger:**
 
 
 
 
 # Elements:
 
-# RobotInterface:
+**RobotInterface:**
 
-# Robot:
+**Robot:**
 
-# FruitInterface:
+**FruitInterface:**
 
-# Fruit: 
+**Fruit:**
 
 
 * we used STtdDraw
@@ -44,6 +44,6 @@ play with your aliens and collect stars as much as possible!
 
 
 
-#  **More details about classes and interfaces of the project can be found on Wiki**
+**More details about classes and interfaces of the project can be found on Wiki**
 
 We hope you enjoy !
