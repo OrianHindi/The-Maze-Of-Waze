@@ -4,13 +4,21 @@ Navigation game in the space
 
 play with your aliens and collect stars as much as possible!
 
+
+
+
+
+# Welcome:
+
+ **THE WELCOME IMAGE**
+ 
 # Introduction:
 
 # Description:
 
-# Welcome:
 
- **THE WALCOME IMAGE**
+
+
 
 
 # GameClient:
@@ -24,6 +32,9 @@ play with your aliens and collect stars as much as possible!
 
 
 
+
+
+
 # Elements:
 
 **RobotInterface:**
@@ -32,17 +43,16 @@ play with your aliens and collect stars as much as possible!
 
 **FruitInterface:**
 
-**Fruit:**
+
+
+
+
+
+
+
 
 
 * we used STtdDraw
-
-
-
-
-
-
-
 
 **More details about classes and interfaces of the project can be found on Wiki**
 
