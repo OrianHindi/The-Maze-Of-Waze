@@ -19,7 +19,7 @@ play with your aliens and collect stars as much as possible!
 
 Example for Scenario 1:
 
-![Scenario11](http://www.up2me.co.il/imgs/48804872.png)
+![Scenario1](http://www.up2me.co.il/imgs/25931287.png)
 
 Example for Scenario 11:
 
