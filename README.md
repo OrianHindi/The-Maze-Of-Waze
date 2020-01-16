@@ -14,8 +14,17 @@ play with your aliens and collect stars as much as possible!
 
  
 # Introduction:
+The maze of waze, is a game locate in the space, that you have to collect stars as much as possible to got the highest score.
 
 # Description:
+
+Location: Space
+
+What your character: Aliens
+
+What do you have to do: collect stars as much as possible
+
+What the purpose: to get the highest grade (score) by collecting stars.
 
 Example for Scenario 1:
 
@@ -31,10 +40,16 @@ Example for Scenario 11:
 
 **MyGameGUI:**
 
-**MyGameAlgo:**
+**MyGameAlgo:** 
 
-**KML_Logger:** 
-KML is a file format used to display geographic data in an Earth browser such as Google Earth. You can create KML files to pinpoint locations, add image overlays, and expose rich data in new ways. KML is an international standard maintained by the Open Geospatial Consortium, Inc.
+**KML_Logger:**
+KML is a file format used to display geographic data in an Earth browser such as Google Earth.
+
+You can create KML files to pinpoint locations and add image overlays.
+
+we make an option to make that file from the game, and locate the game in Google Earth.
+
+KML is an international standard maintained by the Open Geospatial Consortium, Inc.
 
 
 
