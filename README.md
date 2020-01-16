@@ -27,7 +27,8 @@ play with your aliens and collect stars as much as possible!
 
 **MyGameAlgo:**
 
-**KML_Logger:**
+**KML_Logger:** 
+KML is a file format used to display geographic data in an Earth browser such as Google Earth. You can create KML files to pinpoint locations, add image overlays, and expose rich data in new ways. KML is an international standard maintained by the Open Geospatial Consortium, Inc.
 
 
 
