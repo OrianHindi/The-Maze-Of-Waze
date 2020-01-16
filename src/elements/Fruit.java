@@ -22,6 +22,9 @@ public class Fruit implements FruitInterface {
     private int tag;
     private static double EPSILON = 0.0000001;
 
+    /**
+     * Defualt constractor.
+     */
     public Fruit(){
         this.value=0;
         this.img=img;
@@ -30,6 +33,11 @@ public class Fruit implements FruitInterface {
         this.type=0;
         this.tag=0;
     }
+
+    /**
+     * Copy constractor.
+     * @param c the fruit we want to copy.
+     */
     public Fruit(Fruit c){
         this.type=c.type;
         this.pos=new Point3D(c.pos);
@@ -37,6 +45,10 @@ public class Fruit implements FruitInterface {
         this.value=c.value;
     }
 
+    /**
+     * this functin update a fruit from a json string that we get from the server.
+     * @param str the JSON string that represent the changes of the fruit.
+     */
     public void update(String str){
         try {
             JSONObject fruit = new JSONObject(str);
@@ -49,7 +61,11 @@ public class Fruit implements FruitInterface {
 
     }
 
-
+    /**
+     * this function intilaize a fruit from JSON string.
+     * @param str the JSON string that represent the fruit.
+     * @return the fruit that have been built from str.
+     */
     @Override
     public Fruit initFromJson(String str) {
         Fruit temp = new Fruit();
@@ -60,12 +76,17 @@ public class Fruit implements FruitInterface {
             temp.value= fruitt.getDouble("value");
             String pos = fruitt.getString("pos");
             temp.pos= new Point3D(pos);
-            if(temp.type== -1) temp.img="Fruit1.png";
-            else temp.img= "Fruit2.png";
+            if(temp.type== -1) temp.img="redStar.png";
+            else temp.img= "yellowStar.png";
         }catch (Exception e){ e.printStackTrace();}
         return temp;
     }
 
+    /**
+     * this function get list of string and built from this list a list of fruit.
+     * @param arr the list of strings that represent the fruits.
+     * @return the list of fruit that have been built from arr.
+     */
     public ArrayList<Fruit> fillFruitList(List<String> arr){
         ArrayList<Fruit> temp = new ArrayList<>();
         for (String fruit:arr) {
@@ -114,6 +135,11 @@ public class Fruit implements FruitInterface {
         return false;
     }
 
+    /**
+     * this function get array list and copy this list.
+     * @param copy the arraylist we want to copy.
+     * @return the copied arraylist.
+     */
     public ArrayList<Fruit> copy(List<Fruit> copy){
         ArrayList<Fruit> ans = new ArrayList<>(copy.size());
         for (Fruit fruit:copy) {

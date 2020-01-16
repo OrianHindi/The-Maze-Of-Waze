@@ -23,6 +23,9 @@ public class Robot implements RobotInterface {
     private int dest;
 
 
+    /**
+     * Default constractor.
+     */
     public Robot(){
         this.ID=0;
         this.pos=null;
@@ -33,7 +36,10 @@ public class Robot implements RobotInterface {
 
     }
 
-
+    /**
+     * this function update a robot from a String that have been sent from server.
+     * @param str the JSON string that represent the changes in the robot.
+     */
     public void update(String str){
         try {
             JSONObject robot = new JSONObject(str);
@@ -47,6 +53,12 @@ public class Robot implements RobotInterface {
         }catch (Exception e){e.printStackTrace();}
 
     }
+    /**
+     * this function intiliaze a robot from a JSON string.
+     * @param str the JSON string that represent a robot.
+     * @param i an index for the robot img.
+     * @return the robot that have been built from the string.
+     */
     public Robot initFromJson(String str,int i) {
         Robot temp = new Robot();
         try{
@@ -62,6 +74,11 @@ public class Robot implements RobotInterface {
         return temp;
     }
 
+    /**
+     * this function built an arraylist of robots from list of json strings.
+     * @param arr the list of strings that represent the robots.
+     * @return the arraylist that have been built from arr.
+     */
     public ArrayList<Robot> fillRobotList(List<String> arr){
         ArrayList<Robot> temp = new ArrayList<>();
         int indexForPic=0;
@@ -71,12 +88,13 @@ public class Robot implements RobotInterface {
         return temp;
     }
 
-
+    /**
+     * Setters && Getters.
+     */
 
     public String getImg(){
         return this.img;
     }
-
     public Point3D getPos(){
         return this.pos;
     }
@@ -86,69 +104,6 @@ public class Robot implements RobotInterface {
     public double getValue(){
         return this.Rank;
     }
+    public int getId(){return this.ID;}
 
 }
-//
-//    Graph_Algo p = new Graph_Algo(g);
-//    double distRsrcToDest = -1;
-//    int rSrc = this.src;
-//    int edgeDest = -1;
-//    int edgeSrc = -1;
-//    int ans2 = -1;
-//    Fruit temp = null;
-//    edge_data check = null;
-//    edge_data check2 = null;
-//    int nodeid = -1;
-//    double min = Integer.MAX_VALUE;
-//        for (Fruit fruit : arr) {
-//                check = fruit.getFruitEdge(g, fruit);
-//                edgeDest = check.getDest();
-//                edgeSrc = check.getSrc();
-//                if (fruit.getType() == -1) {
-//                ans2 = Math.max(edgeDest, edgeSrc);
-//                distRsrcToDest = p.shortestPathDist(rSrc, ans2);
-//                if (distRsrcToDest == 0) {
-//                if (ans2 == edgeDest) nodeid = edgeSrc;
-//                nodeid = edgeDest;
-//                check2 = check;
-//                temp = fruit;
-//                }
-//                if (distRsrcToDest < min) {
-//        min = distRsrcToDest;
-//        nodeid = ans2;
-//        check2 = check;
-//        temp = fruit;
-//        }
-//        } else if (fruit.getType() == 1) {
-//        ans2 = Math.min(edgeDest, edgeSrc);
-//        distRsrcToDest = p.shortestPathDist(rSrc, ans2);
-//        if (distRsrcToDest == 0) {
-//        if (ans2 == edgeSrc) nodeid = edgeDest;
-//        else nodeid = edgeSrc;
-//        check2 = check;
-//        temp = fruit;
-//        }
-//        if (distRsrcToDest < min) {
-//        min = distRsrcToDest;
-//        nodeid = ans2;
-//        check2 = check;
-//        temp = fruit;
-//        }
-//        }
-//        }
-//        edgeDest = check2.getDest();
-//        edgeSrc = check2.getSrc();
-//
-//        if (temp.getType() == -1) {
-//        ans2 = Math.max(edgeDest, edgeSrc);
-//        if (p.shortestPathDist(nodeid, ans2) == 0 && ans2 == edgeDest) nodeid= edgeSrc;
-//        else nodeid= edgeDest;
-//        }
-//        if (temp.getType() == 1) {
-//        ans2 = Math.min(edgeDest, edgeSrc);
-//        if (p.shortestPathDist(nodeid, ans2) == 0 && ans2 == edgeDest) nodeid=edgeSrc;
-//        else nodeid=edgeDest;
-//        }
-//        List<node_data> temps=p.shortestPath(this.src,nodeid);
-//        System.out.println("temps is:" + temps);
-//        return temps.get(1).getKey();

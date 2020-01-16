@@ -12,14 +12,19 @@ import elements.Robot;
 import org.json.JSONObject;
 import utils.StdDraw;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MyGameAlgo extends  Thread{
     private MyGameGUI MyGG;
+    private KML_Logger kml = new KML_Logger();
 
 
-
+    /**
+     * this function start the automatic game.
+     * @param senario the scenario the client choosed.
+     */
     public void startGame(int senario)  {
         game_service game = Game_Server.getServer(senario); // you have [0,23] games
         this.MyGG.setGame1(game);
@@ -31,21 +36,35 @@ public class MyGameAlgo extends  Thread{
         String info = game.toString();
         System.out.println(info);
         List<String> fruits = this.MyGG.getGame1().getFruits();
-        this.MyGG.setFoodss(this.MyGG.getToAddFruit().fillFruitList(fruits)); ;  //init the Fruits the our ArrayList fruit.
+        this.MyGG.setFoodss(this.MyGG.getToAddFruit().fillFruitList(fruits)); ;  //init the Fruits to our ArrayList fruit.
 
 
         ArrayList<Fruit> copied = this.MyGG.getToAddFruit().copy(this.MyGG.getFoodss());
         int numRobs=MyGG.numOfRobs(info);
-        placeRobots(numRobs,copied);
+        placeRobots(numRobs,copied);  //place the robots in the server.
 
         List<String> robList = game.getRobots();
-        this.MyGG.setPlayers(this.MyGG.getToaddRobot().fillRobotList(robList));
+        this.MyGG.setPlayers(this.MyGG.getToaddRobot().fillRobotList(robList)); //init the Robots to our Arraylist robots.
         this.MyGG.getGame1().startGame();
+        Thread t1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("the thread is about to start");
+                try{
+                    kml.makeKML();
+                }catch (ParseException | InterruptedException e){e.printStackTrace();}
+            }
+        });
+        t1.start();
         this.start();
 
 
     }
 
+    /**
+     * the thread the in charge to do all this each 10 milisec.
+     * update fruit and robots from the server move all the robots and then print all the changes.
+     */
     public void run() {
         while(this.MyGG.getGame1().isRunning()){
             this.MyGG.updateFruits();
@@ -63,6 +82,12 @@ public class MyGameAlgo extends  Thread{
         System.out.println("game is over" + this.MyGG.getGame1().toString());
 
     }
+
+    /**
+     * this function place the robot on the node that have been choosen by the fruit places.
+     * @param numRobs the amout of robots.
+     * @param copied the list of the fruits that we want to put robot near each fruit.
+     */
     public void placeRobots(int numRobs, ArrayList<Fruit> copied) {
         for (int i = 0; i <numRobs; i++) {
             edge_data p = this.MyGG.getToAddFruit().getFruitEdge(this.MyGG.getGgraph(),copied.get(0));
@@ -75,6 +100,12 @@ public class MyGameAlgo extends  Thread{
             copied.remove(0);
         }
     }
+
+    /**
+     * this function move the robots automaticlly.
+     * @param game the game that the client have benn chosen.
+     * @param g the graph that we get from the server .
+     */
     public void moveRobots(game_service game,DGraph g){
         List<String> log = game.move();
         if(log!=null){
@@ -99,6 +130,8 @@ public class MyGameAlgo extends  Thread{
             }
         }
     }
+
+
     public void setMyGG(MyGameGUI p){this.MyGG=p;}
 
 

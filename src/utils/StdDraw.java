@@ -641,7 +641,7 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	 */
 	public static MyGameAlgo g;
 	public static MyGameGUI mgg;
-	public static int isRepaint =0;
+	public static boolean saveToKML = false;
 
 	public static void setCanvasSize(int canvasWidth, int canvasHeight) {
 		if (canvasWidth <= 0 || canvasHeight <= 0)
@@ -1675,8 +1675,6 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 				mgg.getGame1().stopGame();
 				mgg.finishGame();
 				mgg = new MyGameGUI(1);
-//				g= new MyGameAlgo();
-//				g.setMyGG(mgg);
 				int senario=0;
 				String senarioString = JOptionPane.showInputDialog(null,"Please choose a Game Senario");
 				try{
@@ -1685,6 +1683,7 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 				String[] chooseGame = {"Manually Game","Auto Game"};
 				Object selctedGame = JOptionPane.showInputDialog(null,"Choose a Game mode","Message",JOptionPane.INFORMATION_MESSAGE,null,chooseGame,chooseGame[0]);
 				if(selctedGame=="Manually Game") {
+					mgg.startGame_Manual(senario);
 
 				}
 				else {
@@ -1695,6 +1694,7 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 			case "Finish Game":
 				mgg.getGame1().stopGame();
 				mgg.finishGame();
+				System.out.println(saveToKML);
 				break;
 		}
 

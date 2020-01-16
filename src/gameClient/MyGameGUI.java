@@ -17,6 +17,7 @@ import utils.StdDraw;
 
 import javax.swing.*;
 import java.awt.*;
+import java.text.ParseException;
 import java.util.*;
 import java.util.List;
 
@@ -30,16 +31,22 @@ public class MyGameGUI extends Thread {
     private static Range xRange= new Range(0,0);
     private static Range yRange= new Range(0,0);
     private static MyGameAlgo algoGame= new MyGameAlgo();
-    private static int  robturn=0;
+    private static KML_Logger kml=new KML_Logger();
 
 
-
+    /**
+     * Default constracctor.
+     */
     public MyGameGUI() {
         StdDraw.mgg=this;
         algoGame.setMyGG(this);
         openWindow();
     }
 
+    /**
+     * this constractor is for self use.
+     * @param x just an int to diffrent between the constractors.
+     */
     public MyGameGUI (int x){
         StdDraw.mgg=this;
         algoGame= new MyGameAlgo();
@@ -47,6 +54,10 @@ public class MyGameGUI extends Thread {
 
     }
 
+    /**
+     * this function start the manually game. take all the info from server after we get which senario the client want to play.
+     * @param senario the scenario the client want to play.
+     */
     public void startGame_Manual(int senario) {
         //we init the game & graph
         game_service game = Game_Server.getServer(senario); // you have [0,23] games
@@ -64,10 +75,13 @@ public class MyGameGUI extends Thread {
         this.foodss = toAddFruit.fillFruitList(fruits);  //init the Fruits the our ArrayList fruit.
 
         int numRobs = numOfRobs(info);
+        //print the graph and fruits for the client befor choose where to put the robots.
         printGraph();
         printFruit(this.foodss);
         StdDraw.show();
 
+
+        // pop up window that ask the client where he want put the robots.
         String list = JOptionPane.showInputDialog(null,"Please enter " + numRobs + "node keys for Robots.","Shape of x,y,z,w",1);
         int[] keysArr = new int[numRobs];
         System.out.println("num of robs:" + numRobs);
@@ -82,7 +96,7 @@ public class MyGameGUI extends Thread {
                 keysArr[i] = Integer.parseInt(arr[i]);
             }
         }
-        // we placed robots
+        // we placed robots in the server
         placeRobots_Manual(keysArr);
 
         // init the robots
@@ -96,9 +110,23 @@ public class MyGameGUI extends Thread {
         JOptionPane.showMessageDialog(null,"Game is about to start");
 
         this.game1.startGame();
+        Thread t1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("the thread is about to start");
+                try{
+                    kml.makeKML();
+                }catch (ParseException | InterruptedException e){e.printStackTrace();}
+            }
+        });
+        t1.start();
         this.start();
     }
 
+    /**
+     * this function update the robots from the List of string that have been sent from the server.
+     * after we get the list each robot sent to Robot class and get update.
+     */
     public void updateRobots(){
         List<String> robots = this.game1.getRobots();
         if(robots!=null){
@@ -108,6 +136,11 @@ public class MyGameGUI extends Thread {
             }
         }
     }
+
+    /**
+     * this function update the fruits from the list of string that have been sent from the server.
+     * after we get the list each fruit sent to Fruit class and get updated.
+     */
     public void updateFruits() {
         List<String> foods = this.game1.getFruits();
         if (foods != null) {
@@ -116,16 +149,23 @@ public class MyGameGUI extends Thread {
             }
         }
     }
+
+    /**
+     * this function open a window that say we done finish.
+     */
     public void finishGame(){
         StdDraw.setCanvasSize(1024,512);
-        StdDraw.clear(Color.BLUE);
+        StdDraw.clear(Color.BLACK);
         StdDraw.setYscale(-51,50);
         StdDraw.setXscale(-51,50);
-        StdDraw.picture(0,0,"Maze.png");
+        StdDraw.picture(0,0,"gameOver.png");
         StdDraw.show();
     }
 
-
+    /**
+     * this function get array list of int that represent which nodes the client want to put the robots at start of game.
+     * @param arr the array that represent the choosen nodes.
+     */
     private void placeRobots_Manual(int[] arr) {
         for (int i = 0; i <arr.length ; i++) {
             this.game1.addRobot(arr[i]);
@@ -133,8 +173,10 @@ public class MyGameGUI extends Thread {
     }
 
 
-
-
+    /**
+     * this function find the range of x axis from the graph of the game.
+     * @return the Range that have been found.
+     */
     public Range findRangeX(){
         if(this.Ggraph.nodeSize()!=0) {
             double min = Integer.MAX_VALUE;
@@ -154,6 +196,10 @@ public class MyGameGUI extends Thread {
             return Default;
         }
     }
+    /**
+     * this function find the range of y axis from the graph of the game.
+     * @return the Range that have been found.
+     */
     public Range findRangeY(){
         if(this.Ggraph.nodeSize()!=0) {
             double min = Integer.MAX_VALUE;
@@ -173,9 +219,9 @@ public class MyGameGUI extends Thread {
             return Default;
         }
     }
+
     /**
-     * open the window of the graph printed
-     *
+     * this function set the xScale and yScale of the graph.
      */
     public void findRange(){
         Range x = findRangeX();
@@ -184,12 +230,17 @@ public class MyGameGUI extends Thread {
         StdDraw.setYscale(y.get_min()-0.002,y.get_max()+0.002);
 
     }
+
+    /**
+     * this function open the first window when a client want to play.
+     * this function ask from the client which scenario he wanna play and which mode he want to play.
+     */
     public void openWindow(){
         StdDraw.setCanvasSize(1024,512);
         StdDraw.clear(Color.BLUE);
         StdDraw.setYscale(-51,50);
         StdDraw.setXscale(-51,50);
-        StdDraw.picture(0,0,"Maze.png");
+        StdDraw.picture(0,0,"openingScreen.png");
         int senario=0;
         String senarioString = JOptionPane.showInputDialog(null,"Please choose a Game Senario");
         try{
@@ -197,7 +248,7 @@ public class MyGameGUI extends Thread {
         }catch(Exception e1){e1.printStackTrace();}
         String[] chooseGame = {"Manually Game","Auto Game"};
         Object selctedGame = JOptionPane.showInputDialog(null,"Choose a Game mode","Message",JOptionPane.INFORMATION_MESSAGE,null,chooseGame,chooseGame[0]);
-        if(selctedGame=="Auto Game") {
+        if(selctedGame =="Auto Game") {
             StdDraw.clear();
             StdDraw.enableDoubleBuffering();
             algoGame.startGame(senario);
@@ -211,61 +262,111 @@ public class MyGameGUI extends Thread {
         }
 
     }
-//    public void moveRobots_Manual(game_service game, DGraph g) {
-//        List<String> log = game.move();
-//        double x, y = 0;
-//        if (log != null) {
-//            long t = game.timeToEnd();      // we need to check if well run on time or log.size
-//            for (int i = 0; i < log.size(); i++) {
-//                String robot_json = log.get(i);
-//                try {
-//                    JSONObject line = new JSONObject(robot_json);
-//                    JSONObject tomove = line.getJSONObject("Robot");
-//                    int robID = tomove.getInt("id");
-//                    int src = tomove.getInt("src");
-//                    int dest = tomove.getInt("dest");
-//
-//                    if (StdDraw.isMousePressed()) {
-//                        robturn++;
-//                        x = StdDraw.mouseX();
-//                        y = StdDraw.mouseY();
-//                        Node n = (Node) findNode(x, y);
-//                        edge_data p = this.Ggraph.getEdge(src, n.getKey());   // edge neighbors of the robot
-//
-//                        if (n == null || p == null) {
-//                            System.out.println("Please try again");
-//                        } else {
-//                            if (dest == -1) {
-//                                game.chooseNextEdge(robturn % players.size(), n.getKey()); // players(J).CHOOSE
-//                                System.out.println(i);
-//                            }
-//                        }
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
-//    }
-//      @Override
-//    public void run() {
-//        while (this.game1.isRunning()) {
-//            updateFruits();
-//            updateRobots();
-//
-//            moveRobots_Manual(this.game1, this.Ggraph);
-//            this.printGraph();
-//            printRobots(this.players);
-//            printFruit(this.foodss);
-//            StdDraw.show();
-//            try {
-//                sleep(10);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        System.out.println("game is over" + this.game1.toString());
-//    }
+
+    /**
+     * this function find at which node we click at the gui window.
+     * @param x the x point of the mouse click
+     * @param y the y point of the mouse click
+     * @return the node that have been found or null if didnt found.
+     */
+    private node_data findNode(double x, double y){
+        Collection<node_data> temp = this.Ggraph.getV();
+        for (node_data node: temp) {
+            if(x>=node.getLocation().x()-0.0004 && x<= node.getLocation().x()+0.0004 && y>=node.getLocation().y()-0.0004 && y<=node.getLocation().y()+0.0004) return node;
+        }
+        return null;
+    }
+
+    /**
+     * this function move robots manuaaly.
+     */
+    int RobotId=0;
+    public void moveRobots_Manual(game_service game, DGraph g) {
+        List<String> log = game.move();
+        double x, y = 0;
+        if (log != null) {
+            long t = game.timeToEnd();      // we need to check if well run on time or log.size
+            for (int i = 0; i < log.size(); i++) {
+                String robot_json = log.get(i);
+                try {
+                    JSONObject line = new JSONObject(robot_json);
+                    JSONObject tomove = line.getJSONObject("Robot");
+                    int robID = tomove.getInt("id");
+                    System.out.println("rob id: " + robID);
+                    int src = tomove.getInt("src");
+                    int dest = tomove.getInt("dest");
+
+                    // which robot to move
+                    if (StdDraw.isMousePressed()) {
+                        x = StdDraw.mouseX();
+                        y = StdDraw.mouseY();
+                        Node n = (Node) findNode(x, y);
+                        while(n==null) {
+                            x=StdDraw.mouseX();
+                            y=StdDraw.mouseY();
+                            n=(Node)findNode(x,y);
+                        }
+                        for (Robot r : players) {
+                            if (r.getSrc() == n.getKey())
+                                RobotId = r.getId();
+                            System.out.println("robot id: " + RobotId);
+                        }
+                    }
+
+                    System.out.println("robot id second: " + RobotId);
+                    // move robot to where
+                    if (StdDraw.isMousePressed()) {
+                        x = StdDraw.mouseX();
+                        y = StdDraw.mouseY();
+                        Node n = (Node) findNode(x,y);
+                        edge_data p = this.Ggraph.getEdge(src, n.getKey());   // edge neighbors of the robot
+
+                        if (n == null ||  p == null) {
+                            System.out.println("Please try again");
+                        } else {
+                            if (dest == -1){
+                                game.chooseNextEdge(RobotId, n.getKey());
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    /**
+     * the thread that in charge to do this evrey 10 millisecond.
+     */
+    public void run() {
+        while (this.game1.isRunning()) {
+            double x_location = ((xRange.get_max() + xRange.get_min()) / 2);
+            double y_location = ((yRange.get_max() + yRange.get_min()) / 2);
+            StdDraw.setPenColor(Color.BLACK);
+            StdDraw.setPenRadius(0.04);
+            StdDraw.text(x_location, y_location, "Time to Game: " + this.game1.timeToEnd() / 1000);
+            updateFruits();
+            updateRobots();
+
+            // update
+
+            moveRobots_Manual(this.game1, this.Ggraph);
+            this.printGraph();
+            printRobots(this.players);
+            printFruit(this.foodss);
+            StdDraw.show();
+
+            try {
+                sleep(10);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            System.out.println("game is over" + this.game1.toString());
+        }
+    }
+
 
     /**
      * this function prints the graph
@@ -273,6 +374,10 @@ public class MyGameGUI extends Thread {
      */
     public void printGraph(){
         StdDraw.clear();
+        double x_location = ((xRange.get_max() + xRange.get_min())/2);
+        double y_location = ((yRange.get_max() + yRange.get_min())/2);
+        StdDraw.clear();
+        StdDraw.picture(x_location,y_location,"backscreen.png");
         double rightScaleX = ((xRange.get_max()-xRange.get_min())*0.04);
         double rightScaleY =  ((yRange.get_max()-yRange.get_min())*0.04);
         StdDraw.setPenColor(Color.BLUE);
@@ -349,6 +454,12 @@ public class MyGameGUI extends Thread {
         }
 
     }
+
+    /**
+     * this function get the number of robots.
+     * @param s the string the we get from the server.
+     * @return the number of robots that we filtered from the json string  that represent the game.
+     */
     protected int numOfRobs(String s){
         int numRobs=0;
         try {   //get the number of robots from server.
