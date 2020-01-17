@@ -1,4 +1,4 @@
-# Welcome to Maze of Waze!
+# Welcome to the Maze of Waze!
 
 Navigation game in the space
 
@@ -38,9 +38,27 @@ Example for Scenario 11:
 
 # GameClient:
 
+**SimpleGameClient:** 
+The Class SimpleGameClient represents a simple exmaple for using the GameServer API.
+
 **MyGameGUI:**
+The Class MyGameGUI, containing the main using of the GameServer API, that including the Manual gaming option,
+
+and a link to the Auto gaming option (that inside the class MyGameAlgo).
+
+the class using Thread, and including a constructors, startGame function, run function (Thread Override), updateRobots function,
+
+updateFruits function, placeRobots, findRange, openWindow, moveRobots, findNode, printGraph,
+
+printFruit, printRobots, numOfRobs, Getters, Setters and finishGame.
 
 **MyGameAlgo:** 
+The class MyGameAlgo is the Auto option class of the game.
+
+the class including startGame function, run (Thread Override), placeRobots, moveRobots, setMyGG and getNextNode.
+
+this class uses MyGameGUI class as basis.
+
 
 **KML_Logger:**
 KML is a file format used to display geographic data in an Earth browser such as Google Earth.
