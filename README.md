@@ -46,7 +46,7 @@ The Class MyGameGUI, containing the main using of the GameServer API, that inclu
 
 and a link to the Auto gaming option (that inside the class MyGameAlgo).
 
-the class using Thread, and including a constructors, startGame function, run function (Thread Override), updateRobots function,
+the class using Thread, and including a constructors, startGame function, run function (Thread Override), updateRobots function, 
 
 updateFruits function, placeRobots, findRange, openWindow, moveRobots, findNode, printGraph,
 
