@@ -45,13 +45,15 @@ The Class SimpleGameClient represents a simple exmaple for using the GameServer 
 
 **MyGameGUI:**
 
-The Class MyGameGUI, containing the main using of the GameServer API, that including the Manual gaming option, and a link to the Auto 
+The Class MyGameGUI, containing the main using of the GameServer API, that including the Manual gaming option,
 
-gaming option (that inside the class MyGameAlgo).
+and a link to the Auto gaming option (that inside the class MyGameAlgo).
 
 the class using Thread, and including a constructors, and functions as startGame, run  (Thread Override), updateRobots, 
 
-updateFruits, placeRobots, findRange, openWindow, moveRobots, findNode, printGraph, printFruit, printRobots, numOfRobs, Getters, Setters
+updateFruits, placeRobots, findRange, openWindow, moveRobots, findNode, printGraph, printFruit, printRobots,
+
+numOfRobs, Getters, Setters
 
 and finishGame.
 
