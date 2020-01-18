@@ -53,9 +53,7 @@ the class using Thread, and including a constructors, and functions as startGame
 
 updateFruits, placeRobots, findRange, openWindow, moveRobots, findNode, printGraph, printFruit, printRobots,
 
-numOfRobs, Getters, Setters
-
-and finishGame.
+numOfRobs, Getters, Setters and finishGame.
 
 **MyGameAlgo:** 
 
