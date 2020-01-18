@@ -82,19 +82,22 @@ public class MyGameGUI extends Thread {
 
 
         // pop up window that ask the client where he want put the robots.
-        String list = JOptionPane.showInputDialog(null,"Please enter " + numRobs + "node keys for Robots.","Shape of x,y,z,w",1);
+        int check =-1;
         int[] keysArr = new int[numRobs];
-        System.out.println("num of robs:" + numRobs);
-        System.out.println(list);
-        String[] arr=new String[numRobs];
-        if(numRobs==1){
-            keysArr[0]=Integer.parseInt(list);
-        }
-        else {
-            arr = list.split(",");
-            for (int i = 0; i < numRobs; i++) {
-                keysArr[i] = Integer.parseInt(arr[i]);
-            }
+        while(check==-1) {
+           try {
+               String list = JOptionPane.showInputDialog(null, "Please enter " + numRobs + " node key for Robots.", "Shape of x,y,z,w", 1);
+               String[] arr = new String[numRobs];
+               if (numRobs == 1) {
+                   keysArr[0] = Integer.parseInt(list);
+               } else {
+                   arr = list.split(",");
+                   for (int i = 0; i < numRobs; i++) {
+                       keysArr[i] = Integer.parseInt(arr[i]);
+                   }
+               }
+               check=0;
+           }catch(Exception ee){check=-1;}
         }
         // we placed robots in the server
         placeRobots_Manual(keysArr);
@@ -241,13 +244,24 @@ public class MyGameGUI extends Thread {
         StdDraw.setYscale(-51,50);
         StdDraw.setXscale(-51,50);
         StdDraw.picture(0,0,"openingScreen.png");
-        int senario=0;
-        String senarioString = JOptionPane.showInputDialog(null,"Please choose a Game Senario");
-        try{
-            senario=Integer.parseInt(senarioString);
-        }catch(Exception e1){e1.printStackTrace();}
+        int senario=-1;
+        while(senario == -1) {
+            String senarioString = JOptionPane.showInputDialog(null, "Please choose a Game Senario");
+            try {
+                senario = Integer.parseInt(senarioString);
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+        }
+        int check =-1;
+        Object selctedGame= null;
         String[] chooseGame = {"Manually Game","Auto Game"};
-        Object selctedGame = JOptionPane.showInputDialog(null,"Choose a Game mode","Message",JOptionPane.INFORMATION_MESSAGE,null,chooseGame,chooseGame[0]);
+        while(check ==-1) {
+         try {
+              selctedGame = JOptionPane.showInputDialog(null, "Choose a Game mode", "Message", JOptionPane.INFORMATION_MESSAGE, null, chooseGame, chooseGame[0]);
+                check =0;
+         }catch (Exception ee){check=-1;}
+         }
         if(selctedGame =="Auto Game") {
             StdDraw.clear();
             StdDraw.enableDoubleBuffering();
@@ -341,18 +355,26 @@ public class MyGameGUI extends Thread {
      */
     public void run() {
         while (this.game1.isRunning()) {
-            double x_location = ((xRange.get_max() + xRange.get_min()) / 2);
-            double y_location = ((yRange.get_max() + yRange.get_min()) / 2);
-            StdDraw.setPenColor(Color.BLACK);
-            StdDraw.setPenRadius(0.04);
-            StdDraw.text(x_location, y_location, "Time to Game: " + this.game1.timeToEnd() / 1000);
+            // update
             updateFruits();
             updateRobots();
 
-            // update
 
+            //move robots.
             moveRobots_Manual(this.game1, this.Ggraph);
+
+            //Repaint.
             this.printGraph();
+            StdDraw.setPenColor(Color.YELLOW);
+            StdDraw.text(xRange.get_max(), yRange.get_max()+0.0015, "Time to End: " + this.game1.timeToEnd() / 1000);
+            int score=0;
+            try{
+                String info = this.game1.toString();
+                JSONObject p = new JSONObject(info);
+                JSONObject pp = p.getJSONObject("GameServer");
+                score = pp.getInt("grade");
+            }catch (Exception ee){ee.printStackTrace();}
+            StdDraw.text(xRange.get_min(),yRange.get_max()+0.0015,"Score:" + score);
             printRobots(this.players);
             printFruit(this.foodss);
             StdDraw.show();
@@ -486,6 +508,8 @@ public class MyGameGUI extends Thread {
     public Fruit getToAddFruit(){return this.toAddFruit;}
     public DGraph getGgraph(){return this.Ggraph;}
     public MyGameAlgo getAlgoGame(){return algoGame;}
+    public Range getxRange() {return xRange;}
+    public Range getyRange(){return yRange;}
 
 }
 

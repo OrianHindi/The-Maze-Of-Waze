@@ -708,12 +708,6 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 		Game.add(EndGame);
 		EndGame.addActionListener(std);
 
-		JMenu Save = new JMenu("Save");
-		menuBar.add(Save);
-
-		JMenuItem saveToKML = new JMenuItem("Save To KML");
-		Save.add(saveToKML);
-
 		return menuBar;
 	}
 
@@ -1675,13 +1669,24 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 				mgg.getGame1().stopGame();
 				mgg.finishGame();
 				mgg = new MyGameGUI(1);
-				int senario=0;
-				String senarioString = JOptionPane.showInputDialog(null,"Please choose a Game Senario");
-				try{
-					senario=Integer.parseInt(senarioString);
-				}catch(Exception e1){e1.printStackTrace();}
+				int senario=-1;
+				while(senario == -1) {
+					String senarioString = JOptionPane.showInputDialog(null, "Please choose a Game Senario");
+					try {
+						senario = Integer.parseInt(senarioString);
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+				}
+				int check=-1;
+				Object selctedGame= null;
 				String[] chooseGame = {"Manually Game","Auto Game"};
-				Object selctedGame = JOptionPane.showInputDialog(null,"Choose a Game mode","Message",JOptionPane.INFORMATION_MESSAGE,null,chooseGame,chooseGame[0]);
+				while(check ==-1) {
+					try {
+						 selctedGame = JOptionPane.showInputDialog(null, "Choose a Game mode", "Message", JOptionPane.INFORMATION_MESSAGE, null, chooseGame, chooseGame[0]);
+						 check = 0;
+					}catch(Exception ee) {check =-1;}
+					}
 				if(selctedGame=="Manually Game") {
 					mgg.startGame_Manual(senario);
 

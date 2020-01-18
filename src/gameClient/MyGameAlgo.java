@@ -12,6 +12,7 @@ import elements.Robot;
 import org.json.JSONObject;
 import utils.StdDraw;
 
+import java.awt.*;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -71,6 +72,16 @@ public class MyGameAlgo extends  Thread{
             this.MyGG.updateRobots();
             moveRobots(this.MyGG.getGame1(),this.MyGG.getGgraph());
             this.MyGG.printGraph();
+            StdDraw.setPenColor(Color.YELLOW);
+            StdDraw.text(MyGG.getxRange().get_max(), MyGG.getyRange().get_max()+0.0015, "Time to End: " + MyGG.getGame1().timeToEnd() / 1000);
+            int score=0;
+            try{
+                String info = MyGG.getGame1().toString();
+                JSONObject p = new JSONObject(info);
+                JSONObject pp = p.getJSONObject("GameServer");
+                score = pp.getInt("grade");
+            }catch (Exception ee){ee.printStackTrace();}
+            StdDraw.text(MyGG.getxRange().get_min(),MyGG.getyRange().get_max()+0.0015,"Score:" + score);
             this.MyGG.printRobots(this.MyGG.getPlayers());
             this.MyGG.printFruit(this.MyGG.getFoodss());
             StdDraw.show();
@@ -133,7 +144,6 @@ public class MyGameAlgo extends  Thread{
 
 
     public void setMyGG(MyGameGUI p){this.MyGG=p;}
-
 
     /**
      * this function return where should the robot move next.
