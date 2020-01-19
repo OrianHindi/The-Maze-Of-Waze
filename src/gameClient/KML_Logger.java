@@ -23,7 +23,6 @@ public class KML_Logger {
         Kml kmlDoc = new Kml();
         Document doc = kmlDoc.createAndSetDocument();
         int change=0;
-        System.out.println(StdDraw.mgg.getGame1().isRunning());
         if(StdDraw.mgg.getGame1()!=null){
             while(StdDraw.mgg.getGame1().isRunning()){
                 Thread.sleep(100);
@@ -35,16 +34,16 @@ public class KML_Logger {
                     Placemark robotMark = doc.createAndAddPlacemark();
                     Icon robIcon = new Icon();
 
-                    robIcon.setHref("Robot0");
+                    robIcon.setHref("http://pngimg.com/uploads/alien/alien_PNG71.png");
                     robIcon.setViewBoundScale(1);
                     robIcon.setViewRefreshTime(1);
                     robIcon.withRefreshInterval(1);
-//                    IconStyle robIconeStyle = new IconStyle();
-//                    robIconeStyle.setScale(1);
-//                    robIconeStyle.setHeading(1);
-//                    robIconeStyle.setColor("E0FA14");
-//                    robIconeStyle.setIcon(robIcon);
-//                    robotMark.createAndAddStyle().setIconStyle(robIconeStyle);
+                    IconStyle robIconeStyle = new IconStyle();
+                    robIconeStyle.setScale(1);
+                    robIconeStyle.setHeading(1);
+                    robIconeStyle.setColor("ff007db3");
+                    robIconeStyle.setIcon(robIcon);
+                    robotMark.createAndAddStyle().setIconStyle(robIconeStyle);
                     robotMark.withDescription("Mac: " + "\nType: Robot").withOpen(Boolean.TRUE).createAndSetPoint().addToCoordinates(robot.getPos().x(),robot.getPos().y());
                     String robTime1 = MillisToString(StringToMillis(TimeNow())+change*1000);
                     String robTime2 = MillisToString(StringToMillis(TimeNow())+(change +1)*1000);
@@ -60,16 +59,16 @@ public class KML_Logger {
                     Placemark fruitMark = doc.createAndAddPlacemark();
                     Icon fruitIcon = new Icon();
 
-                    fruitIcon.setHref("Fruit1.png");
+                    fruitIcon.setHref("http://pngimg.com/uploads/star/star_PNG1597.png");
                     fruitIcon.setViewBoundScale(1);
                     fruitIcon.setViewRefreshTime(1);
                     fruitIcon.withRefreshInterval(1);
-//                    IconStyle fruitIconStyle = new IconStyle();
-//                    fruitIconStyle.setScale(1);
-//                    fruitIconStyle.setHeading(1);
-//                    fruitIconStyle.setColor("A3250A");
-//                    fruitIconStyle.setIcon(fruitIcon);
-//                    fruitMark.createAndAddStyle().setIconStyle(fruitIconStyle);
+                    IconStyle fruitIconStyle = new IconStyle();
+                    fruitIconStyle.setScale(1);
+                    fruitIconStyle.setHeading(1);
+                    fruitIconStyle.setColor("ff007db3");
+                    fruitIconStyle.setIcon(fruitIcon);
+                    fruitMark.createAndAddStyle().setIconStyle(fruitIconStyle);
                     fruitMark.withDescription("Mac: " + "\nType: Fruit").withOpen(Boolean.TRUE).createAndSetPoint().addToCoordinates(f.getPos().x(),f.getPos().y());
                     String fruitTime1 = MillisToString(StringToMillis(TimeNow())+change*1000);
                     String fruitTime2 = MillisToString(StringToMillis(TimeNow())+(change+1)*1000);
@@ -116,8 +115,7 @@ public class KML_Logger {
     }
 
     public String splitArr(String[] arr){
-        String temp ="";
-        temp= arr[0] + "T" + arr[1] + "Z";
+        String temp= arr[0] + "T" + arr[1] + "Z";
         return temp;
     }
 

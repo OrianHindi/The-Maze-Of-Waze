@@ -249,6 +249,7 @@ public class MyGameGUI extends Thread {
             String senarioString = JOptionPane.showInputDialog(null, "Please choose a Game Senario");
             try {
                 senario = Integer.parseInt(senarioString);
+                if(senario<0 || senario > 23)senario =-1;
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
