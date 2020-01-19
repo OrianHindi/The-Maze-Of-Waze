@@ -69,7 +69,6 @@ public class Fruit implements FruitInterface {
      */
     @Override
     public Fruit initFromJson(String str) {
-        System.out.println("STRING JSON FRUIT =" + str);
         Fruit temp = new Fruit();
         try{
             JSONObject fruit = new JSONObject(str);
@@ -111,7 +110,6 @@ public class Fruit implements FruitInterface {
             if(edges!=null){
                 for (edge_data edge:edges) {
                     if(isOnEdge(g,edge,fruit)){
-                        System.out.println("edge is:" + edge);
                         return edge;
                     }
                 }

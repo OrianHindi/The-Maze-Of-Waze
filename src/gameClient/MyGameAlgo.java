@@ -35,7 +35,6 @@ public class MyGameAlgo extends  Thread{
         this.MyGG.setGgraph(d); // set our Graph to the graph that have been built from JSON that represent the graph of scenario.
         this.MyGG.findRange();  // get the Scale of the graph;
         String info = game.toString();
-        System.out.println(info);
         List<String> fruits = this.MyGG.getGame1().getFruits();
         this.MyGG.setFoodss(this.MyGG.getToAddFruit().fillFruitList(fruits)); ;  //init the Fruits to our ArrayList fruit.
 
@@ -50,7 +49,6 @@ public class MyGameAlgo extends  Thread{
         Thread t1 = new Thread(new Runnable() {
             @Override
             public void run() {
-                System.out.println("the thread is about to start");
                 try{
                     kml.makeKML();
                 }catch (ParseException | InterruptedException e){e.printStackTrace();}

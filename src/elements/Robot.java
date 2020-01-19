@@ -41,7 +41,6 @@ public class Robot implements RobotInterface {
      * @param str the JSON string that represent the changes in the robot.
      */
     public void update(String str){
-        System.out.println("ROBOTS JSON IS = " + str);
         try {
             JSONObject robot = new JSONObject(str);
             JSONObject robott = robot.getJSONObject("Robot");

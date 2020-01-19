@@ -18,8 +18,13 @@ import java.util.Date;
 import java.util.Locale;
 
 public class KML_Logger {
+
+    /**
+     * this function make a file with format of KML. using open source libs.
+     * @throws ParseException
+     * @throws InterruptedException
+     */
     public void makeKML() throws ParseException, InterruptedException {
-        System.out.println("IM HERE!!!! KML");
         Kml kmlDoc = new Kml();
         Document doc = kmlDoc.createAndSetDocument();
         int change=0;
@@ -89,7 +94,6 @@ public class KML_Logger {
             int s = JOptionPane.showConfirmDialog(null,"Save game to KML?","Please choose Yes/No",JOptionPane.YES_NO_OPTION);
             if(s==1) StdDraw.saveToKML=false;
             else StdDraw.saveToKML=true;
-            System.out.println(StdDraw.saveToKML + " at KML");
             if(StdDraw.saveToKML) kmlDoc.marshal(new File("kmlFile.kml"));
         }catch (Exception e){e.printStackTrace();}
     }

@@ -68,7 +68,7 @@ public class MyGameGUI extends Thread {
         this.Ggraph = d; // set our Graph to the graph that have been built from JSON that represent the graph of scenario.
         this.findRange();  // get the Scale of the graph;
         String info = game.toString();
-        //      System.out.println(info);
+
 
         // we init the fruits
         List<String> fruits = this.game1.getFruits();
@@ -116,7 +116,6 @@ public class MyGameGUI extends Thread {
         Thread t1 = new Thread(new Runnable() {
             @Override
             public void run() {
-                System.out.println("the thread is about to start");
                 try{
                     kml.makeKML();
                 }catch (ParseException | InterruptedException e){e.printStackTrace();}
@@ -133,7 +132,6 @@ public class MyGameGUI extends Thread {
     public void updateRobots(){
         List<String> robots = this.game1.getRobots();
         if(robots!=null){
-            System.out.println(this.players.size());
             for (int i = 0; i <this.players.size() ; i++) {
                 this.players.get(i).update(robots.get(i));
             }
@@ -307,7 +305,6 @@ public class MyGameGUI extends Thread {
                     JSONObject line = new JSONObject(robot_json);
                     JSONObject tomove = line.getJSONObject("Robot");
                     int robID = tomove.getInt("id");
-                    System.out.println("rob id: " + robID);
                     int src = tomove.getInt("src");
                     int dest = tomove.getInt("dest");
 
@@ -324,11 +321,9 @@ public class MyGameGUI extends Thread {
                         for (Robot r : players) {
                             if (r.getSrc() == n.getKey())
                                 RobotId = r.getId();
-                            System.out.println("robot id: " + RobotId);
                         }
                     }
 
-                    System.out.println("robot id second: " + RobotId);
                     // move robot to where
                     if (StdDraw.isMousePressed()) {
                         x = StdDraw.mouseX();
