@@ -14,6 +14,7 @@ play with your aliens and collect stars as much as possible!
 
  
 # Introduction:
+
 The maze of waze, is a game locate in the space, that you have to collect stars as much as possible to got the highest score.
 
 # Description:
@@ -39,28 +40,32 @@ Example for Scenario 11:
 # GameClient:
 
 **SimpleGameClient:** 
+
 The Class SimpleGameClient represents a simple exmaple for using the GameServer API.
 
 **MyGameGUI:**
+
 The Class MyGameGUI, containing the main using of the GameServer API, that including the Manual gaming option,
 
 and a link to the Auto gaming option (that inside the class MyGameAlgo).
 
-the class using Thread, and including a constructors, startGame function, run function (Thread Override), updateRobots function, 
+the class using Thread, and including a constructors, and functions as startGame, run  (Thread Override), updateRobots, 
 
-updateFruits function, placeRobots, findRange, openWindow, moveRobots, findNode, printGraph,
+updateFruits, placeRobots, findRange, openWindow, moveRobots, findNode, printGraph, printFruit, printRobots,
 
-printFruit, printRobots, numOfRobs, Getters, Setters and finishGame.
+numOfRobs, Getters, Setters and finishGame.
 
 **MyGameAlgo:** 
+
 The class MyGameAlgo is the Auto option class of the game.
 
-the class including startGame function, run (Thread Override), placeRobots, moveRobots, setMyGG and getNextNode.
+the class including functions as startGame, run (Thread Override), placeRobots, moveRobots, setMyGG and getNextNode.
 
 this class uses MyGameGUI class as basis.
 
 
 **KML_Logger:**
+
 KML is a file format used to display geographic data in an Earth browser such as Google Earth.
 
 You can create KML files to pinpoint locations and add image overlays.
@@ -78,11 +83,13 @@ KML is an international standard maintained by the Open Geospatial Consortium, I
 # Elements:
 
 **RobotInterface:**
+
 The interface RobotInterface, represent a character that init from Json file, in a String format.
 
 the interface support at Robot list with ArrayList.
 
 **Robot:**
+
 The class Robot represent a character in a alien visible, call robot.
 
 The class implements the Interface, and realize all the functions.
