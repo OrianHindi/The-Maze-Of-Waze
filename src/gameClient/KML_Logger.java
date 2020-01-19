@@ -23,7 +23,7 @@ public class KML_Logger {
         Kml kmlDoc = new Kml();
         Document doc = kmlDoc.createAndSetDocument();
         int change=0;
-        if(StdDraw.mgg.getGame1()!=null){
+        if(StdDraw.mgg!=null &&StdDraw.mgg.getGame1()!=null){
             while(StdDraw.mgg.getGame1().isRunning()){
                 Thread.sleep(100);
                 change++;
