@@ -94,14 +94,13 @@ public class KML_Logger {
         }catch (Exception e){e.printStackTrace();}
     }
 
-    public String MillisToString(Long millis)
+    private String MillisToString(Long millis)
     {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return sdf.format(new Date(millis));
     }
 
-
-    public long StringToMillis(String TimeAsString) throws ParseException
+    private long StringToMillis(String TimeAsString) throws ParseException
     {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
         Date date = format.parse(TimeAsString.toString());
@@ -109,12 +108,12 @@ public class KML_Logger {
         return millis;
     }
 
-    public String TimeNow()
+    private String TimeNow()
     {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
     }
 
-    public String splitArr(String[] arr){
+    private String splitArr(String[] arr){
         String temp= arr[0] + "T" + arr[1] + "Z";
         return temp;
     }
