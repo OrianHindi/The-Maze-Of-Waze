@@ -246,7 +246,7 @@ public class MyGameGUI extends Thread {
         StdDraw.picture(0,0,"openingScreen.png");
         int senario=-1;
         while(senario == -1) {
-            String senarioString = JOptionPane.showInputDialog(null, "Please choose a Game Senario");
+            String senarioString = JOptionPane.showInputDialog(null, "Please choose a Game Senario 0-23");
             try {
                 senario = Integer.parseInt(senarioString);
                 if(senario<0 || senario > 23)senario =-1;

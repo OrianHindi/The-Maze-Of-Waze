@@ -57,6 +57,7 @@ public class Fruit implements FruitInterface {
             this.value = fruitt.getDouble("value");
             String pos = fruitt.getString("pos");
             this.pos = new Point3D(pos);
+            this.setTag(0);
         }catch (Exception e){e.printStackTrace();}
 
     }

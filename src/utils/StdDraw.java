@@ -1671,7 +1671,7 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 				mgg = new MyGameGUI(1);
 				int senario=-1;
 				while(senario == -1) {
-					String senarioString = JOptionPane.showInputDialog(null, "Please choose a Game Senario");
+					String senarioString = JOptionPane.showInputDialog(null, "Please choose a Game Senario 0-23");
 					try {
 						senario = Integer.parseInt(senarioString);
 					} catch (Exception e1) {
