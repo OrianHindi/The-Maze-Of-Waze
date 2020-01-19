@@ -29,11 +29,11 @@ What the purpose: to get the highest grade (score) by collecting stars.
 
 Example for Scenario 1:
 
-![Scenario1](http://www.up2me.co.il/imgs/25931287.png)
+![Scenario1](http://www.up2me.co.il/imgs/1172321.jpeg)
 
 Example for Scenario 11:
 
-![Scenario11](http://www.up2me.co.il/imgs/48804872.png)
+![Scenario11](http://www.up2me.co.il/imgs/98026818.jpeg)
 
 
 
