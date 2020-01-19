@@ -69,6 +69,7 @@ public class Fruit implements FruitInterface {
      */
     @Override
     public Fruit initFromJson(String str) {
+        System.out.println("STRING JSON FRUIT =" + str);
         Fruit temp = new Fruit();
         try{
             JSONObject fruit = new JSONObject(str);
@@ -167,6 +168,10 @@ public class Fruit implements FruitInterface {
     public double getValue(){
         return  this.value;
     }
+    public void setValue(double value){this.value=value;}
+    public void setPos(Point3D p){this.pos=p;}
+    public void setImg(String img){this.img=img;}
+    public void setType(int type){this.type=type;}
 
 
 

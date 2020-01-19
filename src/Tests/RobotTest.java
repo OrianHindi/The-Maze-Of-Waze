@@ -7,6 +7,7 @@ import utils.Point3D;
 import static org.junit.Assert.*;
 
 public class RobotTest {
+    static String JSONSTRING = "{\"Robot\":{\"id\":0,\"value\":5,\"src\":7,\"dest\":6,\"speed\":1,\"pos\":\"35.4,32.3,0.0\"}}";
     @Test
     public void setId() {
         Robot r1 = new Robot();
@@ -151,15 +152,30 @@ public class RobotTest {
         assertEquals(1.0,r1.getValue(), 0.0001);
     }
 
-    //    @Test
-//    public void update() {
-//    }
-//
-//    @Test
-//    public void initFromJson() {
-//    }
-//
-//    @Test
-//    public void fillRobotList() {
-//    }
+    @Test
+    public void update() {
+        Robot r = new Robot();
+        Point3D p = new Point3D(35.4,32.3);
+        r.update(JSONSTRING);
+        assertEquals(7,r.getSrc());
+        assertEquals(0,r.getId());
+        assertEquals(5.0,r.getValue(),0.001);
+        assertEquals(6,r.getDest());
+        assertEquals(p,r.getPos());
+
+    }
+
+    @Test
+    public void initFromJson() {
+        Robot r = new Robot();
+        Point3D p = new Point3D(35.4,32.3);
+        Robot pp = r.initFromJson(JSONSTRING,0);
+        assertEquals(7,pp.getSrc());
+        assertEquals(0,pp.getId());
+        assertEquals(0,pp.getValue(),0.001);
+        assertEquals(6,pp.getDest());
+        assertEquals(p,pp.getPos());
+
+    }
+
 }

@@ -1,16 +1,22 @@
 package Tests;
 
+import dataStructure.DGraph;
+import dataStructure.Node;
+import dataStructure.edge_data;
 import dataStructure.graph;
 import elements.Fruit;
 import elements.Robot;
 import org.junit.Test;
 import utils.Point3D;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
 
 public class FruitTest {
+    static String JSONSTRING ="{\"Fruit\":{\"value\":8,\"type\":-1,\"pos\":\"35.4,32.3,0.0\"}}";
+
 
     @Test
     public void setTag() {
@@ -19,7 +25,7 @@ public class FruitTest {
         Fruit f3 = new Fruit();
         f1.setTag(1);
         f2.setTag(0);
-        f3.setValue(0);
+        f3.setTag(0);
         assertEquals(0,f3.getTag());
         assertEquals(0,f2.getTag());
         assertEquals(1,f1.getTag());
@@ -148,22 +154,56 @@ public class FruitTest {
 
     @Test
     public void getFruitEdge() {
+        DGraph d = new DGraph();
+        Node a = new Node(new Point3D(1,2));
+        Node b = new Node(new Point3D(2,4));
+        d.addNode(a);
+        d.addNode(b);
+        d.connect(a.getKey(),b.getKey(),12);
+        Fruit r = new Fruit();
+        r.setPos(new Point3D(1.5,3));
+        edge_data temp = r.getFruitEdge(d,r);
+
+        assertEquals(temp.getSrc(),a.getKey());
+        assertEquals(temp.getDest(),b.getKey());
+
+
+
     }
 
     @Test
     public void copy() {
+        ArrayList<Fruit> arr = new ArrayList<>();
+        Fruit r = new Fruit();
+        r.setType(1);
+        r.setImg("abc");
+        r.setPos(new Point3D(1,1,1));
+        r.setValue(20);
+        arr.add(r);
+        ArrayList<Fruit> p =r.copy(arr);
+        Fruit rr = p.get(0);
+        assertEquals(r.getType(),rr.getType());
+        assertEquals(r.getPos(),rr.getPos());
+        assertEquals(r.getValue(),rr.getValue(),0.0001);
+        assertEquals(r.getImg(),rr.getImg());
     }
+        @Test
+    public void update() {
+        Point3D p = new Point3D(35.4,32.3);
+        Fruit r = new Fruit();
+        r.update(JSONSTRING);
+        assertEquals(8,r.getValue(),0.001);
+        assertEquals(-1,r.getType());
+        assertEquals(p,r.getPos());
 
-
-    //    @Test
-//    public void update() {
-//    }
-//
-//    @Test
-//    public void initFromJson() {
-//    }
-//
-//    @Test
-//    public void fillFruitList() {
-//    }
+    }
+    @Test
+    public void initFromJson() {
+        Point3D pp = new Point3D(35.4,32.3);
+        Fruit temp = new Fruit();
+        Fruit p =temp.initFromJson(JSONSTRING);
+        assertEquals(8.0,p.getValue(),0.001);
+        assertEquals(-1,p.getType());
+        assertEquals(pp,p.getPos());
+    }
 }

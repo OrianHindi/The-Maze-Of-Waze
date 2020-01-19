@@ -41,6 +41,7 @@ public class Robot implements RobotInterface {
      * @param str the JSON string that represent the changes in the robot.
      */
     public void update(String str){
+        System.out.println("ROBOTS JSON IS = " + str);
         try {
             JSONObject robot = new JSONObject(str);
             JSONObject robott = robot.getJSONObject("Robot");
@@ -101,9 +102,15 @@ public class Robot implements RobotInterface {
     public int getSrc(){
         return this.src;
     }
+    public int getDest(){return this.dest;}
     public double getValue(){
         return this.Rank;
     }
     public int getId(){return this.ID;}
+    public void setId(int id){this.ID=id;}
+    public void setImg(String p){this.img=p;}
+    public void setSrc(int i){this.src=i;}
+    public void setPos(Point3D p){this.pos=p;}
+    public void setValue(double val){this.Rank=val;}
 
 }
