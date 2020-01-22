@@ -9,6 +9,7 @@ import utils.StdDraw;
 
 import javax.swing.*;
 import java.io.File;
+import java.nio.file.*;
 import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -94,7 +95,11 @@ public class KML_Logger {
             int s = JOptionPane.showConfirmDialog(null,"Save game to KML?","Please choose Yes/No",JOptionPane.YES_NO_OPTION);
             if(s==1) StdDraw.saveToKML=false;
             else StdDraw.saveToKML=true;
-            if(StdDraw.saveToKML) kmlDoc.marshal(new File("kmlFile.kml"));
+            if(StdDraw.saveToKML) {
+                kmlDoc.marshal(new File("kmlFile" +MyGameGUI.numKML + ".kml"));
+                String save =  readFileAsString("kmlFile" +MyGameGUI.numKML+ ".kml");
+                StdDraw.mgg.getGame1().sendKML(save);
+            }
         }catch (Exception e){e.printStackTrace();}
     }
 
@@ -120,6 +125,12 @@ public class KML_Logger {
     private String splitArr(String[] arr){
         String temp= arr[0] + "T" + arr[1] + "Z";
         return temp;
+    }
+    public static String readFileAsString(String fileName)throws Exception
+    {
+        String data = "";
+        data = new String(Files.readAllBytes(Paths.get(fileName)));
+        return data;
     }
 
 }

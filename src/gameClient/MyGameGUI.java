@@ -32,6 +32,7 @@ public class MyGameGUI extends Thread {
     private static Range yRange= new Range(0,0);
     private static MyGameAlgo algoGame= new MyGameAlgo();
     private static KML_Logger kml=new KML_Logger();
+    public static int numKML =-1;
 
 
     /**
@@ -59,6 +60,8 @@ public class MyGameGUI extends Thread {
      * @param senario the scenario the client want to play.
      */
     public void startGame_Manual(int senario) {
+        int id = 312320062;
+        Game_Server.login(id);
         //we init the game & graph
         game_service game = Game_Server.getServer(senario); // you have [0,23] games
         this.game1 = game;
@@ -247,7 +250,10 @@ public class MyGameGUI extends Thread {
             String senarioString = JOptionPane.showInputDialog(null, "Please choose a Game Senario 0-23");
             try {
                 senario = Integer.parseInt(senarioString);
-                if(senario<0 || senario > 23)senario =-1;
+                if(senario<0 || senario > 23){
+                    senario =-1;
+                }
+                numKML=senario;
             } catch (Exception e1) {
                 e1.printStackTrace();
             }

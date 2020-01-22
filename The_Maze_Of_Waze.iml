@@ -7,7 +7,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="GameServer_v0.27" level="project" />
     <orderEntry type="library" name="java-json" level="project" />
     <orderEntry type="module-library">
       <library name="JUnit4">
@@ -41,5 +40,23 @@
     <orderEntry type="library" name="jaxb-impl-2.1.17" level="project" />
     <orderEntry type="library" name="jaxb-xjc-2.2" level="project" />
     <orderEntry type="library" name="stax-api-1.0-2" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/GameServer_v0.32.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/mysql-connector-java-5.1.47.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
