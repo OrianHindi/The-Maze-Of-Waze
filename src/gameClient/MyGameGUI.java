@@ -245,6 +245,13 @@ public class MyGameGUI extends Thread {
         StdDraw.setYscale(-51,50);
         StdDraw.setXscale(-51,50);
         StdDraw.picture(0,0,"openingScreen.png");
+        int s = JOptionPane.showConfirmDialog(null,"Login to DB?","Please choose Yes/No",JOptionPane.YES_NO_OPTION);
+        if(s==0) {
+            String id= JOptionPane.showInputDialog(null,"please enter an ID");
+            int idtolog = Integer.parseInt(id);
+            StdDraw.ID=idtolog;
+            Game_Server.login(idtolog);
+        }
         int senario=-1;
         while(senario == -1) {
             String senarioString = JOptionPane.showInputDialog(null, "Please choose a Game Senario 0-23");

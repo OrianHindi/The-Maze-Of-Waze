@@ -98,6 +98,7 @@ public class KML_Logger {
             if(StdDraw.saveToKML) {
                 kmlDoc.marshal(new File("kmlFile" +MyGameGUI.numKML + ".kml"));
                 String save =  readFileAsString("kmlFile" +MyGameGUI.numKML+ ".kml");
+                System.out.println(save);
                 StdDraw.mgg.getGame1().sendKML(save);
             }
         }catch (Exception e){e.printStackTrace();}

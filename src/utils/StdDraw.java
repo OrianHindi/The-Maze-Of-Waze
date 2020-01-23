@@ -1,4 +1,5 @@
 package utils;
+import Server.Game_Server;
 import dataStructure.Edge;
 import dataStructure.edge_data;
 import dataStructure.node_data;
@@ -646,7 +647,7 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	public static final String jdbcUrl="jdbc:mysql://db-mysql-ams3-67328-do-user-4468260-0.db.ondigitalocean.com:25060/oop?useUnicode=yes&characterEncoding=UTF-8&useSSL=false";
 	public static final String jdbcUser="student";
 	public static final String jdbcUserPassword="OOP2020student";
-	private static int ID=-1;
+	public static int ID=-1;
 	private static int[] stagesArr={0,1,3,5,9,11,13,16,19,20,23};
 
 	public static void setCanvasSize(int canvasWidth, int canvasHeight) {
@@ -725,16 +726,13 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 		DB.add(Rank);
 		Rank.addActionListener(std);
 
-		JMenuItem Login = new JMenuItem("Login");
+		JMenuItem Login = new JMenuItem("Change Account");
 		Game.add(Login);
 		Login.addActionListener(std);
 
 
 		return menuBar;
 	}
-
-
-
 
 	/***************************************************************************
 	 *  User and screen coordinate systems.
@@ -1725,14 +1723,49 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 				break;
 
 
-			case "Login":
+			case "Change Account":
+				StdDraw.clear();
+				mgg.getGame1().stopGame();
+				mgg.finishGame();
+				mgg = new MyGameGUI(1);
 				String ans = JOptionPane.showInputDialog(null,"Please insert an ID for DB");
 				try{
 					ID = Integer.parseInt(ans);
 				}catch (Exception e1){e1.printStackTrace();}
+				Game_Server.login(ID);
+				int scenario=-1;
+				while(scenario == -1) {
+					String senarioString = JOptionPane.showInputDialog(null, "Please choose a Game Senario 0-23");
+					try {
+						scenario = Integer.parseInt(senarioString);
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+				}
+				MyGameGUI.numKML=scenario;
+				int check2=-1;
+				Object selctedGame1= null;
+				String[] chooseGame2 = {"Manually Game","Auto Game"};
+				while(check2 ==-1) {
+					try {
+						selctedGame1 = JOptionPane.showInputDialog(null, "Choose a Game mode", "Message", JOptionPane.INFORMATION_MESSAGE, null, chooseGame2, chooseGame2[0]);
+						check2 = 0;
+					}catch(Exception ee) {check2 =-1;}
+				}
+				if(selctedGame1=="Manually Game") {
+					mgg.startGame_Manual(scenario);
+
+				}
+				else {
+					mgg.getAlgoGame().startGame(scenario);
+				}
 				break;
 
 			case "Info":
+				String idToCheck = JOptionPane.showInputDialog(null,"Please insert an ID for DB");
+				try{
+					int IDTOCHECK = Integer.parseInt(idToCheck);
+				}catch (Exception e1){e1.printStackTrace();}
 				int GamesPlayed=0;
 				int startcut=0;
 				String temp ="";
@@ -1745,7 +1778,7 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 					Class.forName("com.mysql.jdbc.Driver");
 					Connection connection = DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcUserPassword);
 					Statement statement = connection.createStatement();
-					String allCustomersQuery = "SELECT * FROM Logs WHERE UserID = " + ID + " ORDER BY levelID , score;";
+					String allCustomersQuery = "SELECT * FROM Logs WHERE UserID = " + idToCheck + " ORDER BY levelID , score;";
 					ResultSet resultSet = statement.executeQuery(allCustomersQuery);
 
 					while(resultSet.next()){
@@ -1766,7 +1799,7 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 					infoToShow.append("You Played " + GamesPlayed + " Games \n");
 					for (int i = 0; i <Maximus.length; i++) {
 						if(Maximus[i]!=0){
-							infoToShow.append("ID:" + ID + ", Stage:" + i + ", Best Score:" + Maximus[i] +"\n");
+							infoToShow.append("ID:" + idToCheck + ", Stage:" + i + ", Best Score:" + Maximus[i] +"\n");
 						}
 					}
 					JOptionPane.showMessageDialog(null,infoToShow.toString());
@@ -1834,16 +1867,7 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 
 
 
-//	private class Node{
-//		private String ID;
-//		private int score;
-//
-//		public Node(String id, int score){
-//			this.ID=id;
-//			this.score=score;
-//		}
-//
-//	}
+
 
 	/**
 	 * This method cannot be called directly.

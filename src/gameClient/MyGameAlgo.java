@@ -30,8 +30,6 @@ public class MyGameAlgo extends  Thread {
      * @param senario the scenario the client choosed.
      */
     public void startGame(int senario) {
-        int id = 206554685;
-        Game_Server.login(id);
         game_service game = Game_Server.getServer(senario); // you have [0,23] games
         this.MyGG.setGame1(game);
         String g = game.getGraph();
@@ -247,12 +245,11 @@ public class MyGameAlgo extends  Thread {
     }
 
     private int sleepTime(graph g,ArrayList<Fruit> arrF,ArrayList<Robot> arrR){
-        int ans =160;
+        int ans =106;
         for (Robot rob: arrR) {
             for (Fruit fruit: arrF) {
                 edge_data temp = fruit.getFruitEdge(g,fruit);
                 if(temp.getSrc()==rob.getSrc() || temp.getDest()==rob.getSrc()){
-                    System.out.println("im at sleep");
                     return 50;
                 }
             }
@@ -264,18 +261,6 @@ public class MyGameAlgo extends  Thread {
 
 
 
-// new
-//
-//    Graph_Algo p = new Graph_Algo(g);
-//    edge_data temp = null;
-//    double min = Integer.MAX_VALUE;
-//    double disFromRob = 0;
-//    int whereTo=-1;
-//    int finalWhereTo =-1;
-//        for(int i =0; i<arr.size();i++){
-//
-//        }
-//        return 0;
 
 
 
