@@ -1839,7 +1839,6 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 							myLocation.get(level).put(PersonId,score);
 						}
 					}
-					System.out.println("hello");
 					for (int i = 0; i <stagesArr.length ; i++) {
 						if(myLocation.get(stagesArr[i])!=null){
 							myScore= myLocation.get(stagesArr[i]).get(ID);
@@ -1854,6 +1853,9 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 					}
 
 					JOptionPane.showMessageDialog(null,ans2.toString());
+					resultSet.close();
+					statement.close();
+					connection.close();
 				}catch(SQLException sqlEx){
 					System.out.println("SQLException: " + sqlEx.getMessage());
 				}catch (ClassNotFoundException classEx){classEx.printStackTrace();}
