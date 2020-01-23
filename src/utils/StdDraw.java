@@ -1829,7 +1829,6 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 						int PersonId = resultSet.getInt("UserID");
 						int level =  resultSet.getInt("levelID");
 						int score = resultSet.getInt("score");
-						System.out.println("id" + PersonId + ", level :" + level + " score:" + score);
 						if(myLocation.get(level)==null){
 							HashMap<Integer, Integer> add = new HashMap<>();
 							myLocation.put(level,add);
