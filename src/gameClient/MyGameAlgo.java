@@ -30,7 +30,7 @@ public class MyGameAlgo extends  Thread {
      * @param senario the scenario the client choosed.
      */
     public void startGame(int senario) {
-        int id = 312320062;
+        int id = 206554685;
         Game_Server.login(id);
         game_service game = Game_Server.getServer(senario); // you have [0,23] games
         this.MyGG.setGame1(game);
@@ -132,7 +132,6 @@ public class MyGameAlgo extends  Thread {
      */
     public void moveRobots(game_service game, DGraph g) {
         List<String> log = game.getRobots();
-        System.out.println(log.toString());
         if (log != null) {
             ArrayList<Fruit> copied = this.MyGG.getToAddFruit().copy(this.MyGG.getFoodss());
             long t = game.timeToEnd();
@@ -228,7 +227,7 @@ public class MyGameAlgo extends  Thread {
             }
 
         }
-        System.out.println("im here");
+
         List<node_data> ans = p.shortestPath(r.getSrc(), finalWhereTo);
         for (Fruit fruit: arr) {
             temp = fruit.getFruitEdge(g,fruit);
@@ -239,7 +238,7 @@ public class MyGameAlgo extends  Thread {
         }
         if (ans.size() == 1) {
             List<node_data> ans2 = p.shortestPath(r.getSrc(), (finalWhereTo + 15) % 11);
-            System.out.println("im here 2");
+
             return ans2.get(1).getKey();
         }
         return ans.get(1).getKey();
@@ -248,7 +247,7 @@ public class MyGameAlgo extends  Thread {
     }
 
     private int sleepTime(graph g,ArrayList<Fruit> arrF,ArrayList<Robot> arrR){
-        int ans =100;
+        int ans =160;
         for (Robot rob: arrR) {
             for (Fruit fruit: arrF) {
                 edge_data temp = fruit.getFruitEdge(g,fruit);

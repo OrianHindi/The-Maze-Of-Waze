@@ -1,9 +1,12 @@
 package utils;
 import dataStructure.Edge;
+import dataStructure.edge_data;
 import dataStructure.node_data;
+import gameClient.KML_Logger;
 import gameClient.MyGameAlgo;
 import gameClient.MyGameGUI;
 import gui.Graph_GUI;
+import javafx.beans.binding.IntegerBinding;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -19,11 +22,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.LinkedList;
+import java.sql.*;
+import java.util.*;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.TreeSet;
 
 //package stdDraw;
 // https://introcs.cs.princeton.edu/java/stdlib/StdDraw.java.html
@@ -642,6 +643,11 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	public static MyGameAlgo g;
 	public static MyGameGUI mgg;
 	public static boolean saveToKML = false;
+	public static final String jdbcUrl="jdbc:mysql://db-mysql-ams3-67328-do-user-4468260-0.db.ondigitalocean.com:25060/oop?useUnicode=yes&characterEncoding=UTF-8&useSSL=false";
+	public static final String jdbcUser="student";
+	public static final String jdbcUserPassword="OOP2020student";
+	private static int ID=-1;
+	private static int[] stagesArr={0,1,3,5,9,11,13,16,19,20,23};
 
 	public static void setCanvasSize(int canvasWidth, int canvasHeight) {
 		if (canvasWidth <= 0 || canvasHeight <= 0)
@@ -707,6 +713,22 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 		JMenuItem EndGame = new JMenuItem("Finish Game");
 		Game.add(EndGame);
 		EndGame.addActionListener(std);
+
+		JMenu DB = new JMenu("DB");
+		menuBar.add(DB);
+
+		JMenuItem Info = new JMenuItem("Info");
+		DB.add(Info);
+		Info.addActionListener(std);
+
+		JMenuItem Rank = new JMenuItem("Rank");
+		DB.add(Rank);
+		Rank.addActionListener(std);
+
+		JMenuItem Login = new JMenuItem("Login");
+		Game.add(Login);
+		Login.addActionListener(std);
+
 
 		return menuBar;
 	}
@@ -1678,15 +1700,16 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 						e1.printStackTrace();
 					}
 				}
+				MyGameGUI.numKML=senario;
 				int check=-1;
 				Object selctedGame= null;
 				String[] chooseGame = {"Manually Game","Auto Game"};
 				while(check ==-1) {
 					try {
-						 selctedGame = JOptionPane.showInputDialog(null, "Choose a Game mode", "Message", JOptionPane.INFORMATION_MESSAGE, null, chooseGame, chooseGame[0]);
-						 check = 0;
+						selctedGame = JOptionPane.showInputDialog(null, "Choose a Game mode", "Message", JOptionPane.INFORMATION_MESSAGE, null, chooseGame, chooseGame[0]);
+						check = 0;
 					}catch(Exception ee) {check =-1;}
-					}
+				}
 				if(selctedGame=="Manually Game") {
 					mgg.startGame_Manual(senario);
 
@@ -1699,12 +1722,128 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 			case "Finish Game":
 				mgg.getGame1().stopGame();
 				mgg.finishGame();
-				System.out.println(saveToKML);
+				break;
+
+
+			case "Login":
+				String ans = JOptionPane.showInputDialog(null,"Please insert an ID for DB");
+				try{
+					ID = Integer.parseInt(ans);
+				}catch (Exception e1){e1.printStackTrace();}
+				break;
+
+			case "Info":
+				int GamesPlayed=0;
+				int startcut=0;
+				String temp ="";
+				int[] Maximus = new int[24];
+				int currentStage= MyGameGUI.numKML;
+				StringBuilder infoToShow = new StringBuilder();
+				infoToShow.append("Your current Stage is :" + currentStage + "\n");
+				StringBuilder infoAns = new StringBuilder();
+				try {
+					Class.forName("com.mysql.jdbc.Driver");
+					Connection connection = DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcUserPassword);
+					Statement statement = connection.createStatement();
+					String allCustomersQuery = "SELECT * FROM Logs WHERE UserID = " + ID + " ORDER BY levelID , score;";
+					ResultSet resultSet = statement.executeQuery(allCustomersQuery);
+
+					while(resultSet.next()){
+						infoAns.append(resultSet.getInt("UserID") + ","+ resultSet.getInt("levelID") + "," +  resultSet.getInt("score") + "," + resultSet.getDate("time") + "\n");
+					}
+
+					for (int i = 0; i <infoAns.length(); i++) {
+						if(infoAns.charAt(i)== '\n' ){
+							GamesPlayed++;
+							temp = infoAns.substring(startcut,i);
+							startcut=i+1;
+							String[] tempArr = temp.split(",");
+							int index = Integer.parseInt(tempArr[1]);
+							int score = Integer.parseInt(tempArr[2]);
+							Maximus[index]=score;
+						}
+					}
+					infoToShow.append("You Played " + GamesPlayed + " Games \n");
+					for (int i = 0; i <Maximus.length; i++) {
+						if(Maximus[i]!=0){
+							infoToShow.append("ID:" + ID + ", Stage:" + i + ", Best Score:" + Maximus[i] +"\n");
+						}
+					}
+					JOptionPane.showMessageDialog(null,infoToShow.toString());
+					resultSet.close();
+					statement.close();
+					connection.close();
+
+				}catch(SQLException sqlEx){
+					System.out.println("SQLException: " + sqlEx.getMessage());
+				}catch (ClassNotFoundException classEx){classEx.printStackTrace();}
+				break;
+
+			case "Rank":
+				int counteRank=1; // my location
+				int myScore=0; // the best score for now (KITATI)
+				StringBuilder ans2 = new StringBuilder();
+				HashMap<Integer,HashMap<Integer,Integer>> myLocation = new HashMap<>();
+				try{
+
+					Class.forName("com.mysql.jdbc.Driver");
+					Connection connection = DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcUserPassword);
+					Statement statement = connection.createStatement();
+					String allCustomersQuery = "SELECT * FROM Logs ORDER BY levelID , score;";
+					ResultSet resultSet = statement.executeQuery(allCustomersQuery);
+
+					while(resultSet.next()){
+						int PersonId = resultSet.getInt("UserID");
+						int level =  resultSet.getInt("levelID");
+						int score = resultSet.getInt("score");
+						System.out.println("id" + PersonId + ", level :" + level + " score:" + score);
+						if(myLocation.get(level)==null){
+							HashMap<Integer, Integer> add = new HashMap<>();
+							myLocation.put(level,add);
+							myLocation.get(level).put(PersonId,score);
+						}
+						else{
+							myLocation.get(level).put(PersonId,score);
+						}
+					}
+					System.out.println("hello");
+					for (int i = 0; i <stagesArr.length ; i++) {
+						if(myLocation.get(stagesArr[i])!=null){
+							myScore= myLocation.get(stagesArr[i]).get(ID);
+							Collection<Integer> temp2 = myLocation.get(stagesArr[i]).values();
+							for(Integer score : temp2){
+								if(score>myScore) counteRank++;
+							}
+							ans2.append("ID: " + ID + ", Stage:"+ stagesArr[i] + ", Your place is:" + counteRank + " from " + temp2.size()+ "students \n");
+							counteRank=1;
+						}
+
+					}
+
+					JOptionPane.showMessageDialog(null,ans2.toString());
+				}catch(SQLException sqlEx){
+					System.out.println("SQLException: " + sqlEx.getMessage());
+				}catch (ClassNotFoundException classEx){classEx.printStackTrace();}
 				break;
 		}
 
 	}
 
+
+
+
+
+
+//	private class Node{
+//		private String ID;
+//		private int score;
+//
+//		public Node(String id, int score){
+//			this.ID=id;
+//			this.score=score;
+//		}
+//
+//	}
 
 	/**
 	 * This method cannot be called directly.

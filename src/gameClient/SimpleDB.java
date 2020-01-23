@@ -20,10 +20,10 @@ public class SimpleDB {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-			int id1 = 999;  // "dummy existing ID  
+			int id1 = 312320062;  // "dummy existing ID
 			int level = 0;
-			allUsers();
-			printLog();
+			//allUsers();
+			//printLog();
 			String kml = getKML(id1,level);
 			System.out.println("***** KML file example: ******");
 			System.out.println(kml);
@@ -66,15 +66,21 @@ public class SimpleDB {
 			public static String getKML(int id, int level) {
 				String ans = null;
 				String allCustomersQuery = "SELECT * FROM Users where userID="+id+";";
+				String maxScore = "SELECT MAX(score) FROM Logs where userID="+id+";";
 				try {
 					Class.forName("com.mysql.jdbc.Driver");
 					Connection connection = 
 					DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcUserPassword);		
 					Statement statement = connection.createStatement();
 					ResultSet resultSet = statement.executeQuery(allCustomersQuery);
-					if(resultSet!=null && resultSet.next()) {
-						ans = resultSet.getString("kml_"+level);
+					ResultSet maxscore = statement.executeQuery(maxScore);
+					if(maxscore!=null && maxscore.next()){
+						ans = maxscore.getString("score");
 					}
+
+//					if(resultSet!=null && resultSet.next()) {
+//						ans = resultSet.getString("kml_"+level);
+//					}
 				}
 				catch (SQLException sqle) {
 					System.out.println("SQLException: " + sqle.getMessage());
