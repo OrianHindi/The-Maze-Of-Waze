@@ -245,12 +245,12 @@ public class MyGameAlgo extends  Thread {
     }
 
     private int sleepTime(graph g,ArrayList<Fruit> arrF,ArrayList<Robot> arrR){
-        int ans =90;
+        int ans =35;
         for (Robot rob: arrR) {
             for (Fruit fruit: arrF) {
                 edge_data temp = fruit.getFruitEdge(g,fruit);
                 if(temp.getSrc()==rob.getSrc() || temp.getDest()==rob.getSrc()){
-                    return 45;
+                    return 25;
                 }
             }
         }

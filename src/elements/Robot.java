@@ -69,7 +69,7 @@ public class Robot implements RobotInterface {
             temp.dest=robott.getInt("dest");
             String pos = robott.getString("pos");
             temp.pos= new Point3D(pos);
-            temp.img="Robot" + i +".png";
+            temp.img="pics\\Robot" + i +".png";
         }catch (Exception e){e.printStackTrace();}
         return temp;
     }

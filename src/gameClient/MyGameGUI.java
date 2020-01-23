@@ -162,7 +162,7 @@ public class MyGameGUI extends Thread {
         StdDraw.clear(Color.BLACK);
         StdDraw.setYscale(-51,50);
         StdDraw.setXscale(-51,50);
-        StdDraw.picture(0,0,"gameOver.png");
+        StdDraw.picture(0,0,"pics\\gameOver.png");
         StdDraw.show();
     }
 
@@ -244,7 +244,7 @@ public class MyGameGUI extends Thread {
         StdDraw.clear(Color.BLUE);
         StdDraw.setYscale(-51,50);
         StdDraw.setXscale(-51,50);
-        StdDraw.picture(0,0,"openingScreen.png");
+        StdDraw.picture(0,0,"pics\\openingScreen.png");
         int s = JOptionPane.showConfirmDialog(null,"Login to DB?","Please choose Yes/No",JOptionPane.YES_NO_OPTION);
         if(s==0) {
             String id= JOptionPane.showInputDialog(null,"please enter an ID");
@@ -408,7 +408,7 @@ public class MyGameGUI extends Thread {
         double x_location = ((xRange.get_max() + xRange.get_min())/2);
         double y_location = ((yRange.get_max() + yRange.get_min())/2);
         StdDraw.clear();
-        StdDraw.picture(x_location,y_location,"backscreen.png");
+        StdDraw.picture(x_location,y_location,"pics\\backscreen.png");
         double rightScaleX = ((xRange.get_max()-xRange.get_min())*0.04);
         double rightScaleY =  ((yRange.get_max()-yRange.get_min())*0.04);
         StdDraw.setPenColor(Color.BLUE);

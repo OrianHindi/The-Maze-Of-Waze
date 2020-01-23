@@ -1,5 +1,5 @@
 <component name="ArtifactManager">
-  <artifact type="jar" build-on-make="true" name="The_Maze_Of_Waze:jar">
+  <artifact type="jar" name="The_Maze_Of_Waze:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/The_Maze_Of_Waze_jar</output-path>
     <root id="archive" name="The_Maze_Of_Waze.jar">
       <element id="module-output" name="The_Maze_Of_Waze" />

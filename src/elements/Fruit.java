@@ -77,8 +77,8 @@ public class Fruit implements FruitInterface {
             temp.value= fruitt.getDouble("value");
             String pos = fruitt.getString("pos");
             temp.pos= new Point3D(pos);
-            if(temp.type== -1) temp.img="redStar.png";
-            else temp.img= "yellowStar.png";
+            if(temp.type== -1) temp.img="pics\\redStar.png";
+            else temp.img= "pics\\yellowStar.png";
         }catch (Exception e){ e.printStackTrace();}
         return temp;
     }
