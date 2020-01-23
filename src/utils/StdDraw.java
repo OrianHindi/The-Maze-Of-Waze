@@ -1841,7 +1841,10 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 					}
 					for (int i = 0; i <stagesArr.length ; i++) {
 						if(myLocation.get(stagesArr[i])!=null){
-							myScore= myLocation.get(stagesArr[i]).get(ID);
+							if(myLocation.get(stagesArr[i]).containsKey(ID)) {
+								myScore = myLocation.get(stagesArr[i]).get(ID);
+							}
+							else continue;
 							Collection<Integer> temp2 = myLocation.get(stagesArr[i]).values();
 							for(Integer score : temp2){
 								if(score>myScore) counteRank++;
